@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Stanislav Vasilyev](https://up.htmlacademy.ru/javascript/25/user/1895687).
-* Наставник: `Дмитрий Гуляев`.
+* Наставник: [Дмитрий Гуляев](https://htmlacademy.ru/profile/dima).
 
 ---
 
