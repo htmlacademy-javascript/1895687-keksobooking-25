@@ -5,6 +5,9 @@
 function generateInteger(min, max){
   const minNumber = Number(min);
   const maxNumber = Number(max);
+  if (maxNumber<0 || minNumber<0){
+    throw 'Invalid range: the limits mustn\'t be negative';
+  }
   if(maxNumber > minNumber){
     const amplitude = (maxNumber-minNumber)*0.5;
     const currentTime = Date.now();
@@ -22,7 +25,7 @@ function generateInteger(min, max){
   if(maxNumber === minNumber){
     return maxNumber;
   }
-  throw 'Invalid range';
+  throw 'Invalid range: max must be greater or equal than min';
 }
 //The function generates a random floating point number
 // with a value between the min and the max inclusively.
@@ -32,6 +35,9 @@ function generateInteger(min, max){
 function generateFloat(min, max, digits){
   const minNumber = Number(min);
   const maxNumber = Number(max);
+  if (maxNumber<0 || minNumber<0){
+    throw 'Invalid range: the limits mustn\'t be negative';
+  }
   if(maxNumber > minNumber){
     const amplitude = (maxNumber-minNumber)*0.5;
     const currentTime = Date.now();
@@ -54,7 +60,7 @@ function generateFloat(min, max, digits){
   if(maxNumber === minNumber){
     return maxNumber;
   }
-  throw 'Invalid range';
+  throw 'Invalid range:  max must be greater or equal than min';
 }
 generateInteger(0,1);
 generateFloat(1.0001, 1.0002,7);
