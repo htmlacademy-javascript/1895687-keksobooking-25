@@ -1,6 +1,7 @@
 //The function generates a random integer number
 // with a value between the min and the max inclusively.
 //Please pay attention:
+//the limits mustn't be negative and
 //the max must be greater or equal than the min, else the function generates an exception
 function generateInteger(min, max){
   const minNumber = Number(min);
@@ -25,12 +26,13 @@ function generateInteger(min, max){
   if(maxNumber === minNumber){
     return maxNumber;
   }
-  throw 'Invalid range: max must be greater or equal than min';
+  throw 'Invalid range: the max must be greater than or equal the min';
 }
 //The function generates a random floating point number
 // with a value between the min and the max inclusively.
 // digits is the number of digits to appear after the decimal point
 //Please pay attention:
+//the limits mustn't be negative and
 //the max must be greater or equal than the min, else the function generates an exception
 function generateFloat(min, max, digits){
   const minNumber = Number(min);
@@ -60,7 +62,7 @@ function generateFloat(min, max, digits){
   if(maxNumber === minNumber){
     return maxNumber;
   }
-  throw 'Invalid range:  max must be greater or equal than min';
+  throw 'Invalid range: the max must be greater than or equal the min';
 }
 generateInteger(0,1);
 generateFloat(1.0001, 1.0002,7);
