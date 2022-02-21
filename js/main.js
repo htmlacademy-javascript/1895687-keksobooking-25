@@ -22,7 +22,7 @@ function generateInteger(min, max){
   if(maxNumber === minNumber){
     return maxNumber;
   }
-  return null;
+  throw 'Invalid range';
 }
 //The function generates a random floating point number
 // with a value between the min and the max inclusively.
@@ -54,7 +54,7 @@ function generateFloat(min, max, digits){
   if(maxNumber === minNumber){
     return maxNumber;
   }
-  return null;
+  throw 'Invalid range';
 }
 generateInteger(0,1);
 generateFloat(1.0001, 1.0002,7);
