@@ -10,17 +10,9 @@ function generateInteger(min, max){
     throw 'Invalid range: the limits mustn\'t be negative';
   }
   if(maxNumber > minNumber){
-    const amplitude = (maxNumber-minNumber)*0.5;
-    const currentTime = Date.now();
-    const offset = 2*amplitude*Math.random();//amplitude*Math.sin(currentTime);
-    const outcome = minNumber+Math.round(offset);
-
-    if(outcome>maxNumber){
-      return maxNumber;
-    }
-    if(outcome<minNumber){
-      return minNumber;
-    }
+    const distance = maxNumber-minNumber+1;
+    const offset = distance*Math.random();
+    const outcome = minNumber+Math.floor(offset);
     return outcome;
   }
   if(maxNumber === minNumber){
@@ -41,23 +33,10 @@ function generateFloat(min, max, digits){
     throw 'Invalid range: the limits mustn\'t be negative';
   }
   if(maxNumber > minNumber){
-    const amplitude = (maxNumber-minNumber)*0.5;
-    const currentTime = Date.now();
-    const offset = amplitude*Math.sin(currentTime);
-    let outcome = minNumber+amplitude+offset;
-    let scaler = 1;
-
-    for(let i=0; i<digits;i++){
-      scaler*=10;
-    }
-    outcome=Math.round(outcome*scaler)/scaler;
-    if(outcome>maxNumber){
-      return maxNumber;
-    }
-    if(outcome<minNumber){
-      return minNumber;
-    }
-    return outcome;
+    const distance = maxNumber-minNumber;
+    const offset = distance*Math.random();
+    const outcome = minNumber+offset;
+    return Number(outcome.toFixed(digits));
   }
   if(maxNumber === minNumber){
     return maxNumber;
@@ -73,7 +52,7 @@ const MAX_ROOMS_COUNT = 20;
 const MAX_GUESTS_COUNT = 20;
 const authorsIds = []; //to exclude repeatitions
 
-const accommodationType = {
+const ACCOMMODATION_TYPE = {
   1: 'palace',
   2: 'flat',
   3: 'house',
@@ -81,18 +60,18 @@ const accommodationType = {
   5: 'hotel'
 };
 
-const checkInTime = [
+const CHECK_IN_TIMES = [
   '12:00',
   '13:00',
   '14:00'
 ];
 
-const checkOutTime = [
+const CHECK_OUT_TIMES = [
   '12:00',
   '13:00',
   '14:00'
 ];
-const possibleFeatures = [
+const POSSIBLE_FEATURES = [
   'wifi',
   'dishwasher',
   'parking',
@@ -100,17 +79,17 @@ const possibleFeatures = [
   'elevator',
   'conditioner'
 ];
-const possiblePhotos = [
+const POSSIBLE_PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
-const possibleTitles = [
+const POSSIBLE_TITLES = [
   'Такого вы еще не видели',
   'Попробуйте что-то новое',
   'Хорошее предложение'
 ];
-const possibleDescriptions =[
+const POSSIBLE_DESCRIPTIONS =[
   'Предложение говорит само за себя',
   'Станция метро в 5 минутах пешком',
   'Из окна открываются отличные виды, большой потенциал для активного отдыха'
@@ -171,23 +150,23 @@ const createLocation = ()=>{
 };
 
 const createAnOffer = ()=>{
-  const featuresCount = generateInteger(0, possibleFeatures.length);
-  const offersFeatures = generateArray(featuresCount, possibleFeatures);
-  const photosCount = generateInteger(0, possiblePhotos.length);
-  const offersPhotos = generateArray(photosCount, possiblePhotos);
+  const featuresCount = generateInteger(0, POSSIBLE_FEATURES.length);
+  const offersFeatures = generateArray(featuresCount, POSSIBLE_FEATURES);
+  const photosCount = generateInteger(0, POSSIBLE_PHOTOS.length);
+  const offersPhotos = generateArray(photosCount, POSSIBLE_PHOTOS);
   const location = createLocation();
   const someAddress = ''.concat(location.lat, ', ', location.lng);
   return {
-    title: possibleTitles[generateInteger(0,possibleTitles.length-1)],
+    title: POSSIBLE_TITLES[generateInteger(0,POSSIBLE_TITLES.length-1)],
     address: someAddress,
     price: generateInteger(1, MAX_PRICE),
-    type: accommodationType[generateInteger(1,5)],
+    type: ACCOMMODATION_TYPE[generateInteger(1,5)],
     rooms: generateInteger(1, MAX_ROOMS_COUNT),
     guests: generateInteger(0, MAX_GUESTS_COUNT),
-    checkIn: checkInTime[generateInteger(0, checkInTime.length-1)],
-    checkOut: checkOutTime[generateInteger(0, checkOutTime.length-1)],
+    checkIn: CHECK_IN_TIMES[generateInteger(0, CHECK_IN_TIMES.length-1)],
+    checkOut: CHECK_OUT_TIMES[generateInteger(0, CHECK_OUT_TIMES.length-1)],
     features: offersFeatures,
-    description: possibleDescriptions[generateInteger(0, possibleDescriptions.length-1)],
+    description: POSSIBLE_DESCRIPTIONS[generateInteger(0, POSSIBLE_DESCRIPTIONS.length-1)],
     photos: offersPhotos
   };
 };
