@@ -3,7 +3,7 @@
 //Please pay attention:
 //the limits mustn't be negative and
 //the max must be greater or equal than the min, else the function generates an exception
-function generateInteger(min, max){
+const generateInteger = (min, max) => {
   const minNumber = Number(min);
   const maxNumber = Number(max);
   if (maxNumber<0 || minNumber<0){
@@ -19,14 +19,14 @@ function generateInteger(min, max){
     return maxNumber;
   }
   throw 'Invalid range: the max must be greater than or equal the min';
-}
+};
 //The function generates a random floating point number
 // with a value between the min and the max inclusively.
 // digits is the number of digits to appear after the decimal point
 //Please pay attention:
 //the limits mustn't be negative and
 //the max must be greater or equal than the min, else the function generates an exception
-function generateFloat(min, max, digits){
+const generateFloat = (min, max, digits) => {
   const minNumber = Number(min);
   const maxNumber = Number(max);
   if (maxNumber<0 || minNumber<0){
@@ -42,7 +42,8 @@ function generateFloat(min, max, digits){
     return maxNumber;
   }
   throw 'Invalid range: the max must be greater than or equal the min';
-}
+};
+
 generateInteger(0,1);
 generateFloat(1.0001, 1.0002,7);
 
@@ -95,7 +96,7 @@ const POSSIBLE_DESCRIPTIONS =[
   'Из окна открываются отличные виды, большой потенциал для активного отдыха'
 ];
 
-const checkIdExistance = (id, ids)=>{
+const checkIdExistance = (id, ids) => {
   let flag = false;
   for(let i = 0; i<ids.length && !flag; i++){
     flag = ids[i]===id;
@@ -103,7 +104,7 @@ const checkIdExistance = (id, ids)=>{
   return flag;
 };
 
-const createAnAuthor = ()=>{
+const createAnAuthor = () => {
   let avatarPath = 'img/avatars/user';
   let id = generateInteger(1,MAX_AUTHORS_COUNT);
   if (authorsIds.length === MAX_AUTHORS_COUNT){
@@ -122,7 +123,7 @@ const createAnAuthor = ()=>{
   return author;
 };
 
-const generateArray = (count, values) =>{
+const generateArray = (count, values) => {
   const declaredIds = [];
   const array = [];
   for(let i=0; i<count; i++){
@@ -136,7 +137,7 @@ const generateArray = (count, values) =>{
   return array;
 };
 
-const createLocation = ()=>{
+const createLocation = () => {
   const MIN_LATITUDE = 35.65;
   const MAX_LATITUDE = 35.7;
   const MIN_LONGITUDE = 139.7;
@@ -149,7 +150,7 @@ const createLocation = ()=>{
   };
 };
 
-const createAnOffer = ()=>{
+const createAnOffer = () => {
   const featuresCount = generateInteger(0, POSSIBLE_FEATURES.length);
   const offersFeatures = generateArray(featuresCount, POSSIBLE_FEATURES);
   const photosCount = generateInteger(0, POSSIBLE_PHOTOS.length);
