@@ -1,8 +1,3 @@
-//The function generates a random integer number
-// with a value between the min and the max inclusively.
-//Please pay attention:
-//the limits mustn't be negative and
-//the max must be greater or equal than the min, else the function generates an exception
 const generateInteger = (min, max) => {
   const minNumber = Number(min);
   const maxNumber = Number(max);
@@ -20,12 +15,7 @@ const generateInteger = (min, max) => {
   }
   throw 'Invalid range: the max must be greater than or equal the min';
 };
-//The function generates a random floating point number
-// with a value between the min and the max inclusively.
-// digits is the number of digits to appear after the decimal point
-//Please pay attention:
-//the limits mustn't be negative and
-//the max must be greater or equal than the min, else the function generates an exception
+
 const generateFloat = (min, max, digits) => {
   const minNumber = Number(min);
   const maxNumber = Number(max);
@@ -47,11 +37,15 @@ const generateFloat = (min, max, digits) => {
 generateInteger(0,1);
 generateFloat(1.0001, 1.0002,7);
 
-const MAX_AUTHORS_COUNT = 10;
 const MAX_PRICE = 200;
 const MAX_ROOMS_COUNT = 20;
 const MAX_GUESTS_COUNT = 20;
-const authorsIds = []; //to exclude repeatitions
+
+const authorsInfo = {      //to exclude repeatitions
+  packSize: 10,
+  lastPackIds: [],
+  currentBorder:10
+};
 
 const ACCOMMODATION_TYPE = {
   1: 'palace',
@@ -96,43 +90,52 @@ const POSSIBLE_DESCRIPTIONS =[
   'Из окна открываются отличные виды, большой потенциал для активного отдыха'
 ];
 
-const checkIdExistance = (id, ids) => {
+const clearArray = (array) => {
+  let count = array.length;
+  while(count>0){
+    array.pop();
+    count--;
+  }
+};
+
+const checkElementPresence = (element, values) => {
   let flag = false;
-  for(let i = 0; i<ids.length && !flag; i++){
-    flag = ids[i]===id;
+  for(let i = 0; i<values.length && !flag; i++){
+    flag = values[i]===element;
   }
   return flag;
 };
 
 const createAnAuthor = () => {
-  let avatarPath = 'img/avatars/user';
-  let id = generateInteger(1,MAX_AUTHORS_COUNT);
-  if (authorsIds.length === MAX_AUTHORS_COUNT){
-    throw 'Достигнуто максимальное количество авторов';
+  let avatar = 'img/avatars/user';
+  if (authorsInfo.lastPackIds.length === authorsInfo.packSize){
+    clearArray(authorsInfo.lastPackIds);
+    authorsInfo.currentBorder+=authorsInfo.packSize;
   }
-  while(checkIdExistance(id, authorsIds)){
-    id = generateInteger(1,MAX_AUTHORS_COUNT);
+  const min = authorsInfo.currentBorder - authorsInfo.packSize + 1;
+  const max = authorsInfo.currentBorder;
+  let id = generateInteger(min, max);
+  while(checkElementPresence(id, authorsInfo.lastPackIds)){
+    id = generateInteger(min, max);
   }
-  authorsIds[authorsIds.length]=id;
-  id = (id>=10) ? String(id) : '0'.concat(String(id));
-  avatarPath = avatarPath.concat(id, '.png');
-  const author = {
-    avatar: avatarPath
+  authorsInfo.lastPackIds.push(id);
+  id = String(id).padStart(2,'0');
+  avatar = avatar.concat(id, '.png');
+  return {
+    avatar
   };
-
-  return author;
 };
 
-const generateArray = (count, values) => {
-  const declaredIds = [];
+const generateArrayFrom = (count, donor) => {
+  const takenIndexes = [];
   const array = [];
   for(let i=0; i<count; i++){
-    let id = generateInteger(1, values.length);
-    while(checkIdExistance(id, declaredIds)){
-      id = generateInteger(1, values.length);
+    let index = generateInteger(0, donor.length-1);
+    while(checkElementPresence(index, takenIndexes)){
+      index = generateInteger(0, donor.length-1);
     }
-    declaredIds[declaredIds.length]=id;
-    array[array.length] = values[id-1];
+    takenIndexes.push(index);
+    array.push(donor[index]);
   }
   return array;
 };
@@ -142,20 +145,19 @@ const createLocation = () => {
   const MAX_LATITUDE = 35.7;
   const MIN_LONGITUDE = 139.7;
   const MAX_LONGITUDE = 139.8;
-  const accuracy = 5;             //digits after the decimal point
+  const ACCURACY = 5;             //digits after the decimal point
 
   return {
-    lat: generateFloat(MIN_LATITUDE, MAX_LATITUDE, accuracy),
-    lng: generateFloat(MIN_LONGITUDE, MAX_LONGITUDE, accuracy)
+    lat: generateFloat(MIN_LATITUDE, MAX_LATITUDE, ACCURACY),
+    lng: generateFloat(MIN_LONGITUDE, MAX_LONGITUDE, ACCURACY)
   };
 };
 
-const createAnOffer = () => {
+const createAnOffer = (location = createLocation()) => {
   const featuresCount = generateInteger(0, POSSIBLE_FEATURES.length);
-  const offersFeatures = generateArray(featuresCount, POSSIBLE_FEATURES);
+  const offersFeatures = generateArrayFrom(featuresCount, POSSIBLE_FEATURES);
   const photosCount = generateInteger(0, POSSIBLE_PHOTOS.length);
-  const offersPhotos = generateArray(photosCount, POSSIBLE_PHOTOS);
-  const location = createLocation();
+  const offersPhotos = generateArrayFrom(photosCount, POSSIBLE_PHOTOS);
   const someAddress = ''.concat(location.lat, ', ', location.lng);
   return {
     title: POSSIBLE_TITLES[generateInteger(0,POSSIBLE_TITLES.length-1)],
@@ -172,11 +174,26 @@ const createAnOffer = () => {
   };
 };
 
+const createAnAdvert = () => {
+  const location = createLocation();
+  return {
+    author: createAnAuthor(),
+    offer: createAnOffer(location),
+    location
+  };
+};
 
-const authors = Array.from({length: 10}, createAnAuthor);
-const offers = Array.from({length: 10}, createAnOffer);
-const locations = Array.from({length: 10}, createLocation);
+const createAdverts = (count = 10) => Array.from({length:count}, createAnAdvert);
+const createAuthors = (count = 10) => Array.from({length: count}, createAnAuthor);
+const createOffers = (count = 10) => Array.from({length: count}, createAnOffer);
+const createLocations = (count = 10) => Array.from({length: count}, createLocation);
 
-// console.table(authors);
-// console.table(offers);
-// console.table(locations);
+const doNothing = (flag = true) => {
+  if(!flag){
+    createAdverts();
+    createAuthors();
+    createOffers();
+    createLocations();
+  }
+};
+doNothing();
