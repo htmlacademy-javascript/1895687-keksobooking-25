@@ -177,6 +177,6 @@ const authors = Array.from({length: 10}, createAnAuthor);
 const offers = Array.from({length: 10}, createAnOffer);
 const locations = Array.from({length: 10}, createLocation);
 
-console.table(authors);
-console.table(offers);
-console.table(locations);
+// console.table(authors);
+// console.table(offers);
+// console.table(locations);
