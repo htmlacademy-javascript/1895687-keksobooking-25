@@ -1,5 +1,5 @@
-import { clearArray } from './array-utils';
-import { generateInteger } from './number-generators';
+import { clearArray } from './array-utils.js';
+import { generateInteger } from './number-generators.js';
 
 const authorsInfo = {      //to exclude repeatitions
   packSize: 10,

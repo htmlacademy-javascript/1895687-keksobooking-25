@@ -1,3 +1,3 @@
-import {createAdverts} from './create-advert';
+import {createAdverts} from './create-advert.js';
 
 createAdverts();

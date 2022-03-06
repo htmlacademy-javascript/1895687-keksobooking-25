@@ -1,6 +1,6 @@
-import { createLocation } from './create-location';
-import { createAnAuthor } from './create-author';
-import { createAnOffer } from './create-offer';
+import { createLocation } from './create-location.js';
+import { createAnAuthor } from './create-author.js';
+import { createAnOffer } from './create-offer.js';
 
 const createAnAdvert = () => {
   const location = createLocation();
