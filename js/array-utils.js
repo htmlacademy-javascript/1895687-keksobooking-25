@@ -1,13 +1,5 @@
 import { generateInteger } from './number-generators.js';
 
-const clearArray = (array) => {
-  let count = array.length;
-  while(count>0){
-    array.pop();
-    count--;
-  }
-};
-
 const getAnElement = (array) => array.length ? array[ generateInteger(0, array.length-1) ] : undefined ;
 
 const generateArrayFrom = (count, donor) => {
@@ -21,12 +13,11 @@ const generateArrayFrom = (count, donor) => {
     takenIndexes.push(index);
     array.push(donor[index]);
   }
-  clearArray(takenIndexes);
+  takenIndexes.splice(0,takenIndexes.length);
   return array;
 };
 
 export{
-  clearArray,
   getAnElement,
   generateArrayFrom
 };

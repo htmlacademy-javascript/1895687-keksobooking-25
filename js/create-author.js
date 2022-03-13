@@ -1,4 +1,3 @@
-import { clearArray } from './array-utils.js';
 import { generateInteger } from './number-generators.js';
 
 const authorsInfo = {      //to exclude repeatitions
@@ -10,7 +9,7 @@ const authorsInfo = {      //to exclude repeatitions
 const createAnAuthor = () => {
   let avatar = 'img/avatars/user';
   if (authorsInfo.lastPackIds.length === authorsInfo.packSize){
-    clearArray(authorsInfo.lastPackIds);
+    authorsInfo.lastPackIds.splice(0,authorsInfo.lastPackIds.length);
     authorsInfo.currentBorder+=authorsInfo.packSize;
   }
   const min = authorsInfo.currentBorder - authorsInfo.packSize + 1;
