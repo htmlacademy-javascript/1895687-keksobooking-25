@@ -1,0 +1,1 @@
+import './adverts-rendering.js';
