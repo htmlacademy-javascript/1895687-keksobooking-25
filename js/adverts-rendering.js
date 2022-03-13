@@ -34,8 +34,13 @@ adverts.forEach(( {author, offer} ) => {
       translatedType = 'Тип не указан';
   }
   newAdvert.querySelector('.popup__type').textContent = translatedType;
-  newAdvert.querySelector('.popup__text--capacity').textContent = `${ rooms  } комнаты для ${  guests  } гостей`;
-  newAdvert.querySelector('.popup__text--time').textContent = `Заезд после ${ checkIn }, выезд до ${ checkOut }`;
+  const visitors = guests ? guests : 0;
+  const capacityInfo = rooms ? `${ rooms } комнаты для ${ visitors } гостей` : '';
+  newAdvert.querySelector('.popup__text--capacity').textContent = capacityInfo;
+  const checkInText = checkIn ? `Заезд после ${ checkIn }` : 'Время заезда не определено';
+  const checkOutText = checkOut ? `выезд до ${ checkOut }` : 'время выезда не определено';
+  const timeInfo = `${ checkInText }, ${ checkOutText }`;
+  newAdvert.querySelector('.popup__text--time').textContent = timeInfo;
   const featuresContainer = newAdvert.querySelector('.popup__features');
   featuresContainer.querySelectorAll('.popup__feature').forEach((element) => {
     if(features){

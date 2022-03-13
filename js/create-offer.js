@@ -26,7 +26,7 @@ const createAnOffer = (location = createLocation()) => {
     price: generateInteger(1, MAX_PRICE),
     type: getAnElement(ACCOMMODATION_TYPES),
     rooms: generateInteger(1, MAX_ROOMS_COUNT),
-    guests: generateInteger(1, MAX_GUESTS_COUNT),
+    guests: generateInteger(0, MAX_GUESTS_COUNT),
     checkIn: getAnElement(CHECK_IN_TIME),
     checkOut: getAnElement(CHECK_OUT_TIME),
     features,
