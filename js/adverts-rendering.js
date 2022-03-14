@@ -1,5 +1,15 @@
 import {createAdverts} from './create-advert.js';
 
+const thesaurus = {
+  'flat' : 'Квартира',
+  'bungalow' : 'Бунгало',
+  'house':'Дом',
+  'palace':'Дворец',
+  'hotel':'Отель'
+};
+
+const hideElement = (element) => element.classList.add('hidden');  // returns undefined
+
 const adverts = createAdverts(1);
 
 const theAdvertTemplate = document.querySelector('#card').content;
@@ -10,52 +20,39 @@ adverts.forEach(( {author, offer} ) => {
   const { avatar } = author;
   const { title, address, price, type, rooms, guests, checkIn, checkOut, features, description, photos } = offer;
   const newAdvert = theAdvertSample.cloneNode(true);
-  newAdvert.querySelector('.popup__title').textContent = title ? title : '';
-  newAdvert.querySelector('.popup__text--address').textContent = address ? address : '';
-  newAdvert.querySelector('.popup__text--price').textContent = price ? `${ price } ₽/ночь` : 'Цена не указана';
-  let translatedType;
-  switch (type) {
-    case 'flat':
-      translatedType = 'Квартира';
-      break;
-    case 'bungalow':
-      translatedType = 'Бунгало';
-      break;
-    case 'house':
-      translatedType = 'Дом';
-      break;
-    case 'palace':
-      translatedType = 'Дворец';
-      break;
-    case 'hotel':
-      translatedType = 'Отель';
-      break;
-    default:
-      translatedType = 'Тип не указан';
-  }
-  newAdvert.querySelector('.popup__type').textContent = translatedType;
+  const titleElement = newAdvert.querySelector('.popup__title');
+  titleElement.textContent = title ? title : hideElement(titleElement);
+  const addressElement = newAdvert.querySelector('.popup__text--address');
+  addressElement.textContent = address ? address : hideElement(addressElement);
+  const priceElement = newAdvert.querySelector('.popup__text--price');
+  priceElement.textContent = price ? `${ price } ₽/ночь` : hideElement(priceElement);
+  const typeElement = newAdvert.querySelector('.popup__type');
+  typeElement.textContent = type ? thesaurus[type] : hideElement(typeElement);
   const visitors = guests ? guests : 0;
-  const capacityInfo = rooms ? `${ rooms } комнаты для ${ visitors } гостей` : '';
-  newAdvert.querySelector('.popup__text--capacity').textContent = capacityInfo;
-  const checkInText = checkIn ? `Заезд после ${ checkIn }` : 'Время заезда не определено';
-  const checkOutText = checkOut ? `выезд до ${ checkOut }` : 'время выезда не определено';
-  const timeInfo = `${ checkInText }, ${ checkOutText }`;
-  newAdvert.querySelector('.popup__text--time').textContent = timeInfo;
+  const capacityElement = newAdvert.querySelector('.popup__text--capacity');
+  capacityElement.textContent  = rooms ?
+    `${ rooms } комнаты для ${ visitors } гостей` :
+    hideElement(capacityElement);
+  const timeElement = newAdvert.querySelector('.popup__text--time');
+  timeElement.textContent = checkIn && checkOut ?
+    `Заезд после ${ checkIn }, выезд до ${ checkOut }` :
+    hideElement(timeElement);
   const featuresContainer = newAdvert.querySelector('.popup__features');
-  featuresContainer.querySelectorAll('.popup__feature').forEach((element) => {
-    if(features){
+  if(features){
+    featuresContainer.querySelectorAll('.popup__feature').forEach((element) => {
       const isDeclared = features.some(
         (feature) => element.classList.contains(`popup__feature--${feature}`)
       );
       if(!isDeclared){
         element.remove();
       }
-    }
-    else{
-      element.remove();
-    }
-  });
-  newAdvert.querySelector('.popup__description').textContent = description ? description: '';
+    });
+  }
+  else{
+    hideElement(featuresContainer);
+  }
+  const descriptionElement = newAdvert.querySelector('.popup__description');
+  descriptionElement.textContent = description ? description: hideElement(descriptionElement);
   const photosContainer = newAdvert.querySelector('.popup__photos');
   const photoSample = photosContainer.querySelector('.popup__photo').cloneNode(true);
   photosContainer.querySelectorAll('.popup__photo').forEach((element) => element.remove());
@@ -66,9 +63,11 @@ adverts.forEach(( {author, offer} ) => {
       photosContainer.append(newPhotoItem);
     });
   }
+  else{
+    hideElement(photosContainer);
+  }
   newAdvert.querySelector('.popup__avatar').src = avatar ? avatar : '';
 
   fragment.append(newAdvert);
 });
 document.querySelector('#map-canvas').append(fragment);
-
