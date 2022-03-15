@@ -1,4 +1,4 @@
-const MAX_PRICE = 200;
+const MAX_PRICE = 100000;
 const MAX_ROOMS_COUNT = 20;
 const MAX_GUESTS_COUNT = 20;
 
