@@ -93,7 +93,8 @@
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--wide">
           <label class="ad-form__label" for="address">Адрес (координаты)</label>
-          <input id="address" name="address" type="text" required>
+          <input id="address" name="address" type="text" pattern="[\d]{1,3}.[\d]{5,7},[\d]{1,3}.[\d]{5,7}"
+          placeholder="Формат: 123.45678,123.45678" required>
         </fieldset>
         <fieldset class="ad-form__element">
           <label class="ad-form__label" for="type">Тип жилья</label>
@@ -232,7 +233,7 @@
       <button type="button" class="error__button">Попробовать снова</button>
     </div>
   </template>
-  <script src = "pristine/pristine.min.js"></script>
+  <script src="pristine/pristine.min.js"></script>
   <script type="module" src="js\main.js"></script>
 </body>
 </html>
