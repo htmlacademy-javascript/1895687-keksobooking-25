@@ -359,6 +359,10 @@ fieldset {
   max-width: 50%;
 }
 
+.ad-form__element--error {
+  color: red;
+}
+
 .ad-form__label {
   display: block;
   padding-bottom: 5px;
