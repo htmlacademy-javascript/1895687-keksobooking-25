@@ -94,7 +94,8 @@
         <fieldset class="ad-form__element ad-form__element--wide">
           <label class="ad-form__label" for="address">Адрес (координаты)</label>
           <input id="address" name="address" type="text" required
-          pattern="-?[0-8]?\d.\d{1,7},-?([0-1]?[0-8]\d|\d{1,2}).\d{1,7}"
+          data-pristine-pattern="/^-?[0-8]?[0-9]([.][0-9]{1,7})?,-?([0-1]?[0-7][0-9]|[0-9]{1,2})([.][0-9]{1,7})?$/"
+          data-pristine-pattern-message="Формат адреса: -89.9999999,-179.9999999 знак - и дробная часть не обязательны"
           placeholder="Формат: -89.9999999,-179.9999999">
         </fieldset>
         <fieldset class="ad-form__element">
@@ -114,7 +115,7 @@
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--time">
           <label class="ad-form__label" for="timein">Время заезда и выезда</label>
-          <select id="timein" name="timein">
+          <select id="timein" name="timein" title="Time to go in">
             <option value="12:00" selected>После 12</option>
             <option value="13:00">После 13</option>
             <option value="14:00">После 14</option>
@@ -234,7 +235,7 @@
       <button type="button" class="error__button">Попробовать снова</button>
     </div>
   </template>
-  <script src="pristine/pristine.min.js"></script>
+  <script src="pristine\pristine.min.js"></script>
   <script type="module" src="js\main.js"></script>
 </body>
 </html>
