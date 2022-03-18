@@ -16,24 +16,22 @@ const minPrice = {
   'palace': 10000
 };
 
-const fillUpStandartPristineAttributes = (fields)=>{
-  fields.forEach((field)=>{
-    if(field.hasAttribute('required')){
-      field.dataset.pristineRequiredMessage = 'Это поле должно быть заполнено';
-    }
-    if(field.hasAttribute('minLength')){
-      field.dataset.pristineMinlengthMessage = `Минимальная длина ${field.minLength} символов`;
-    }
-    if(field.hasAttribute('maxLength')){
-      field.dataset.pristineMaxlengthMessage = `Максимальная длина ${field.maxLength} символов`;
-    }
-    if(field.hasAttribute('max')){
-      field.dataset.pristineMaxMessage = `Максимальное допустимое значение: ${field.max}`;
-    }
-  });
+const fillUpStandartPristineAttributes = (field)=>{
+  if(field.hasAttribute('required')){
+    field.dataset.pristineRequiredMessage = 'Это поле должно быть заполнено';
+  }
+  if(field.hasAttribute('minLength')){
+    field.dataset.pristineMinlengthMessage = `Минимальная длина ${field.minLength} символов`;
+  }
+  if(field.hasAttribute('maxLength')){
+    field.dataset.pristineMaxlengthMessage = `Максимальная длина ${field.maxLength} символов`;
+  }
+  if(field.hasAttribute('max')){
+    field.dataset.pristineMaxMessage = `Максимальное допустимое значение: ${field.max}`;
+  }
 };
 
-fillUpStandartPristineAttributes(fieldsCollection);
+fieldsCollection.forEach((field) => fillUpStandartPristineAttributes(field));
 
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
