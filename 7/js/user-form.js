@@ -1,3 +1,5 @@
+import { createLocation } from './create-location.js';
+
 const form = document.querySelector('.ad-form');
 const fieldsCollection = form.querySelectorAll('input');
 const priceField = form.querySelector('#price');
@@ -14,25 +16,24 @@ const minPrice = {
   'palace': 10000
 };
 
-fieldsCollection.forEach((field)=>{
-  if(field.hasAttribute('required')){
-    field.dataset.pristineRequiredMessage='Это поле должно быть заполнено';
-  }
-  if(field.hasAttribute('minLength')){
-    field.dataset.pristineMinlengthMessage=`Минимальная длина ${field.minLength} символов`;
-  }
-  if(field.hasAttribute('maxLength')){
-    field.dataset.pristineMaxlengthMessage=`Максимальная длина ${field.maxLength} символов`;
-  }
-  if(field.hasAttribute('max')){
-    field.dataset.pristineMaxMessage=`Максимальное допустимое значение: ${field.max}`;
-  }
-});
-addressField.removeAttribute('pattern');
-addressField.dataset.pristinePattern=
-  '/^-?[0-8]?[0-9]([.][0-9]{1,7})?,-?([0-1]?[0-7][0-9]|[0-9]{1,2})([.][0-9]{1,7})?$/';
-addressField.dataset.pristinePatternMessage=
-  'Формат адреса: -89.9999999,-179.9999999 знак - и дробная часть не обязательны';
+const fillUpStandartPristineAttributes = (fields)=>{
+  fields.forEach((field)=>{
+    if(field.hasAttribute('required')){
+      field.dataset.pristineRequiredMessage = 'Это поле должно быть заполнено';
+    }
+    if(field.hasAttribute('minLength')){
+      field.dataset.pristineMinlengthMessage = `Минимальная длина ${field.minLength} символов`;
+    }
+    if(field.hasAttribute('maxLength')){
+      field.dataset.pristineMaxlengthMessage = `Максимальная длина ${field.maxLength} символов`;
+    }
+    if(field.hasAttribute('max')){
+      field.dataset.pristineMaxMessage = `Максимальное допустимое значение: ${field.max}`;
+    }
+  });
+};
+
+fillUpStandartPristineAttributes(fieldsCollection);
 
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
@@ -40,18 +41,20 @@ const pristine = new Pristine(form, {
   errorTextClass: 'ad-form__element--error'
 });
 
-const validatePrice = (value)=>(value>=minPrice[accomodation.value]);
-const warnPriceValidation = ()=>`Цена слишком низкая, минимальная: ${minPrice[accomodation.value]}`;
+const validatePrice = (value) => value >= minPrice[accomodation.value];
+
+const warnPriceValidation = () => `Цена слишком низкая, минимальная: ${ minPrice[accomodation.value] }`;
 
 pristine.addValidator(priceField, validatePrice, warnPriceValidation);
 
-const validateCapacity = (value) => Number(rooms.value)===100 && Number(value)===0 ||
-Number(value) <= Number(rooms.value) && Number(value)>0 && Number(rooms.value)<100;
-const warnCapacityValidation = ()=>{
-  if(Number(capacity.value)>Number(rooms.value)){
+const validateCapacity = (value) => +rooms.value === 100 && +value === 0 ||
++value <= +rooms.value && +value > 0 && +rooms.value < 100;
+
+const warnCapacityValidation = () => {
+  if(+capacity.value > +rooms.value){
     return 'Гостей не должно быть больше, чем комнат';
   }
-  if(Number(capacity.value)===0){
+  if(+capacity.value === 0){
     return 'Должен быть хоть 1 гость';
   }
   return 'Данная конфигурация не для гостей';
@@ -59,23 +62,31 @@ const warnCapacityValidation = ()=>{
 
 pristine.addValidator(capacity, validateCapacity, warnCapacityValidation);
 
-pristine.validate();
+priceField.setAttribute('placeholder', `от ${minPrice[accomodation.value]}`);
 
-priceField.setAttribute('placeholder',`от ${minPrice[accomodation.value]}`);
-
-const accomodationChangingHandler = (evt)=>{
-  priceField.setAttribute('placeholder',`от ${minPrice[evt.target.value]}`);
-  pristine.validate(priceField);
+const accomodationChangingHandler = (evt) => {
+  priceField.setAttribute('placeholder', `от ${minPrice[evt.target.value]}`);
+  if (priceField.value !== ''){
+    pristine.validate(priceField);
+  }
 };
 
 accomodation.addEventListener('change', accomodationChangingHandler);
 
-const roomsChangingHandler = ()=>{
+const priceChangingHandler = () => {
+  pristine.validate(priceField);
+};
+
+priceField.addEventListener('change', priceChangingHandler);
+
+const roomsChangingHandler = () => {
   pristine.validate(capacity);
 };
 rooms.addEventListener('change', roomsChangingHandler);
 
 form.addEventListener('submit', (evt) => {
+  const address = createLocation();
+  addressField.value = `${ address.lat }, ${ address.lng }`;
   const isValid = pristine.validate();
   if(!isValid){
     evt.preventDefault();
