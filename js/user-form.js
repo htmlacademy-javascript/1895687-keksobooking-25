@@ -1,4 +1,4 @@
-import { createLocation } from "./create-location.js";
+import { createLocation } from './create-location.js';
 
 const form = document.querySelector('.ad-form');
 const fieldsCollection = form.querySelectorAll('input');
