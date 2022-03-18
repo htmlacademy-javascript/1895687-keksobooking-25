@@ -4,6 +4,7 @@ const priceField = form.querySelector('#price');
 const accomodation = form.querySelector('#type');
 const rooms = form.querySelector('#room_number');
 const capacity = form.querySelector('#capacity');
+const addressField = form.querySelector('#address');
 
 const minPrice = {
   'bungalow' : 0,
@@ -27,10 +28,16 @@ fieldsCollection.forEach((field)=>{
     field.dataset.pristineMaxMessage=`Максимальное допустимое значение: ${field.max}`;
   }
 });
+addressField.removeAttribute('pattern');
+addressField.dataset.pristinePattern=
+  '/^-?[0-8]?[0-9]([.][0-9]{1,7})?,-?([0-1]?[0-7][0-9]|[0-9]{1,2})([.][0-9]{1,7})?$/';
+addressField.dataset.pristinePatternMessage=
+  'Формат адреса: -89.9999999,-179.9999999 знак - и дробная часть не обязательны';
 
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
-  errorTextParent: 'ad-form__element'
+  errorTextParent: 'ad-form__element',
+  errorTextClass: 'ad-form__element--error'
 });
 
 const validatePrice = (value)=>(value>=minPrice[accomodation.value]);
