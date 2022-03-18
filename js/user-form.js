@@ -19,16 +19,16 @@ const minPrice = {
 const fillUpStandartPristineAttributes = (fields)=>{
   fields.forEach((field)=>{
     if(field.hasAttribute('required')){
-      field.dataset.pristineRequiredMessage='Это поле должно быть заполнено';
+      field.dataset.pristineRequiredMessage = 'Это поле должно быть заполнено';
     }
     if(field.hasAttribute('minLength')){
-      field.dataset.pristineMinlengthMessage=`Минимальная длина ${field.minLength} символов`;
+      field.dataset.pristineMinlengthMessage = `Минимальная длина ${field.minLength} символов`;
     }
     if(field.hasAttribute('maxLength')){
-      field.dataset.pristineMaxlengthMessage=`Максимальная длина ${field.maxLength} символов`;
+      field.dataset.pristineMaxlengthMessage = `Максимальная длина ${field.maxLength} символов`;
     }
     if(field.hasAttribute('max')){
-      field.dataset.pristineMaxMessage=`Максимальное допустимое значение: ${field.max}`;
+      field.dataset.pristineMaxMessage = `Максимальное допустимое значение: ${field.max}`;
     }
   });
 };
@@ -62,10 +62,10 @@ const warnCapacityValidation = () => {
 
 pristine.addValidator(capacity, validateCapacity, warnCapacityValidation);
 
-priceField.setAttribute('placeholder',`от ${minPrice[accomodation.value]}`);
+priceField.setAttribute('placeholder', `от ${minPrice[accomodation.value]}`);
 
-const accomodationChangingHandler = (evt)=>{
-  priceField.setAttribute('placeholder',`от ${minPrice[evt.target.value]}`);
+const accomodationChangingHandler = (evt) => {
+  priceField.setAttribute('placeholder', `от ${minPrice[evt.target.value]}`);
   if (priceField.value !== ''){
     pristine.validate(priceField);
   }
@@ -73,13 +73,13 @@ const accomodationChangingHandler = (evt)=>{
 
 accomodation.addEventListener('change', accomodationChangingHandler);
 
-const priceChangingHandler = () =>{
+const priceChangingHandler = () => {
   pristine.validate(priceField);
 };
 
 priceField.addEventListener('change', priceChangingHandler);
 
-const roomsChangingHandler = ()=>{
+const roomsChangingHandler = () => {
   pristine.validate(capacity);
 };
 rooms.addEventListener('change', roomsChangingHandler);
