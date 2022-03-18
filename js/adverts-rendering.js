@@ -70,4 +70,5 @@ adverts.forEach(( {author, offer} ) => {
 
   fragment.append(newAdvert);
 });
+
 document.querySelector('#map-canvas').append(fragment);
