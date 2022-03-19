@@ -31,8 +31,7 @@ const deactivateForm = (selector, inactivityClass) => {
   }
 };
 
-deactivateForm('.ad-form', 'ad-form--disabled');
-deactivateForm('.map__filters','map__filters--disabled');
-
-activateForm('.ad-form', 'ad-form--disabled');
-activateForm('.map__filters','map__filters--disabled');
+export{
+  activateForm,
+  deactivateForm
+};
