@@ -45,7 +45,7 @@ priceField.setAttribute('min', minPrice[accomodation.value]);
 
 const validatePrice = (value) => Number(value) >= Number(priceField.min);
 
-const warnPriceValidation = () => `Цена слишком низкая, минимальная: ${ minPrice[accomodation.value] }`;
+const warnPriceValidation = () => `Цена слишком низкая, минимальная: ${ priceField.min }`;
 
 pristine.addValidator(priceField, validatePrice, warnPriceValidation);
 
@@ -85,10 +85,10 @@ const warnCapacityValidation = () => {
 
 pristine.addValidator(capacity, validateCapacity, warnCapacityValidation);
 
-priceField.setAttribute('placeholder', `от ${minPrice[accomodation.value]}`);
+priceField.setAttribute('placeholder', `от ${ minPrice[accomodation.value] }`);
 
 const accomodationChangingHandler = (evt) => {
-  priceField.setAttribute('placeholder', `от ${minPrice[evt.target.value]}`);
+  priceField.setAttribute('placeholder', `от ${ minPrice[evt.target.value] }`);
   priceField.setAttribute('min', minPrice[evt.target.value]);
   if (priceField.value !== ''){
     pristine.validate(priceField);
