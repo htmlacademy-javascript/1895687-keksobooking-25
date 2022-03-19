@@ -40,8 +40,8 @@ const pristine = new Pristine(form, {
   errorTextParent: 'ad-form__element',
   errorTextClass: 'ad-form__element--error'
 });
-
-const validatePrice = (value) => value >= minPrice[accomodation.value];
+priceField.setAttribute('min', minPrice[accomodation.value]);
+const validatePrice = (value) => Number(value) >= Number(priceField.min);
 
 const warnPriceValidation = () => `Цена слишком низкая, минимальная: ${ minPrice[accomodation.value] }`;
 
@@ -87,6 +87,7 @@ priceField.setAttribute('placeholder', `от ${minPrice[accomodation.value]}`);
 
 const accomodationChangingHandler = (evt) => {
   priceField.setAttribute('placeholder', `от ${minPrice[evt.target.value]}`);
+  priceField.setAttribute('min', minPrice[accomodation.value]);
   if (priceField.value !== ''){
     pristine.validate(priceField);
   }
