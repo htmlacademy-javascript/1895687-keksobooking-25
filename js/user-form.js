@@ -16,7 +16,7 @@ const minPrice = {
   'palace': 10000
 };
 
-const fillUpStandartPristineAttributes = (field)=>{
+const fillUpStandartPristineAttributes = (field) => {
   if(field.hasAttribute('required')){
     field.dataset.pristineRequiredMessage = 'Это поле должно быть заполнено';
   }
@@ -45,8 +45,28 @@ const warnPriceValidation = () => `Цена слишком низкая, мин�
 
 pristine.addValidator(priceField, validatePrice, warnPriceValidation);
 
-const validateCapacity = (value) => +rooms.value === 100 && +value === 0 ||
-+value <= +rooms.value && +value > 0 && +rooms.value < 100;
+const roomsOptions = rooms.children;
+let roomsHighLimit = -Infinity;
+for(const option of roomsOptions){
+  if(Number(option.value) > roomsHighLimit){
+    roomsHighLimit = Number(option.value);
+  }
+}
+
+const capacityOptions = capacity.children;
+let capacityLowLimit = Infinity;
+for(const option of capacityOptions){
+  if(Number(option.value) < capacityLowLimit){
+    capacityLowLimit = Number(option.value);
+  }
+}
+
+const validateCapacity = (value) => {
+  const notForGuests = Number(rooms.value) === roomsHighLimit && Number(value) === capacityLowLimit;
+  // forGuests != !notForGuests ( !(a & b) = !a | !b )
+  const forGuests = Number(rooms.value) !== roomsHighLimit && Number(value) !== capacityLowLimit;
+  return notForGuests || forGuests && Number(value) <= Number(rooms.value);
+};
 
 const warnCapacityValidation = () => {
   if(+capacity.value > +rooms.value){
