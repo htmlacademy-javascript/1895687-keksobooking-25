@@ -7,6 +7,8 @@ const accomodation = form.querySelector('#type');
 const rooms = form.querySelector('#room_number');
 const capacity = form.querySelector('#capacity');
 const addressField = form.querySelector('#address');
+const timeIn = form.querySelector('#timein');
+const timeOut = form.querySelector('#timeout');
 
 const minPrice = {
   'bungalow' : 0,
@@ -45,6 +47,7 @@ const warnPriceValidation = () => `Цена слишком низкая, мин�
 
 pristine.addValidator(priceField, validatePrice, warnPriceValidation);
 
+// I would have done a couple below via .reduce() if there had been the opportunity
 const roomsOptions = rooms.children;
 let roomsHighLimit = -Infinity;
 for(const option of roomsOptions){
@@ -97,9 +100,17 @@ const priceChangingHandler = () => {
 
 priceField.addEventListener('change', priceChangingHandler);
 
+const timeChangingHandler = function(evt){
+  this.value = evt.target.value;
+};
+
+timeIn.addEventListener('change', timeChangingHandler.bind(timeOut));
+timeOut.addEventListener('change', timeChangingHandler.bind(timeIn));
+
 const roomsChangingHandler = () => {
   pristine.validate(capacity);
 };
+
 rooms.addEventListener('change', roomsChangingHandler);
 
 form.addEventListener('submit', (evt) => {
