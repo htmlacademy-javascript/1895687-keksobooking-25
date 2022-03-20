@@ -49,22 +49,18 @@ const warnPriceValidation = () => `Цена слишком низкая, мин�
 
 pristine.addValidator(priceField, validatePrice, warnPriceValidation);
 
-// I would have done a couple below via .reduce() if there had been the opportunity
-const roomsOptions = rooms.children;
-let roomsHighLimit = -Infinity;
-for(const option of roomsOptions){
-  if(Number(option.value) > roomsHighLimit){
-    roomsHighLimit = Number(option.value);
+const getExtremNumberValue = (elements, high) => {
+  let result = high ? -Infinity : Infinity;
+  for(const element of elements){
+    result = high && Number(element.value) > result || !high && Number(element.value) < result ?
+      Number(element.value) :
+      result;
   }
-}
+  return result;
+};
 
-const capacityOptions = capacity.children;
-let capacityLowLimit = Infinity;
-for(const option of capacityOptions){
-  if(Number(option.value) < capacityLowLimit){
-    capacityLowLimit = Number(option.value);
-  }
-}
+const roomsHighLimit = getExtremNumberValue(rooms.children, true);
+const capacityLowLimit = getExtremNumberValue(capacity.children, false);
 
 const validateCapacity = (value) => {
   const notForGuests = Number(rooms.value) === roomsHighLimit && Number(value) === capacityLowLimit;
@@ -74,10 +70,10 @@ const validateCapacity = (value) => {
 };
 
 const warnCapacityValidation = () => {
-  if(+capacity.value > +rooms.value){
+  if(Number(capacity.value) > Number(rooms.value)){
     return 'Гостей не должно быть больше, чем комнат';
   }
-  if(+capacity.value === 0){
+  if(Number(capacity.value) === 0){
     return 'Должен быть хоть 1 гость';
   }
   return 'Данная конфигурация не для гостей';
