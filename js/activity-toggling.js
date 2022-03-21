@@ -14,16 +14,14 @@ const activateSubTree = (root) => {
   }
 };
 
-const activateForm = (selector, inactivityClass) => {
-  const form = document.querySelector(selector);
+const activateForm = (form, inactivityClass) => {
   const formSubNodes = form.children;
   form.classList.remove(inactivityClass);
   for(let i=0; i<formSubNodes.length; i++){
     activateSubTree(formSubNodes[i]);
   }
 };
-const deactivateForm = (selector, inactivityClass) => {
-  const form = document.querySelector(selector);
+const deactivateForm = (form, inactivityClass) => {
   form.classList.add(inactivityClass);
   const formSubNodes = form.children;
   for(let i=0; i<formSubNodes.length; i++){

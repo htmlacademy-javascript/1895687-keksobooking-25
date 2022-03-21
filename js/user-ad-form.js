@@ -1,4 +1,5 @@
 import { createLocation } from './create-location.js';
+import { deactivateForm } from './activity-toggling.js';
 
 const form = document.querySelector('.ad-form');
 const fieldsCollection = form.querySelectorAll('input');
@@ -120,3 +121,4 @@ form.addEventListener('submit', (evt) => {
     evt.preventDefault();
   }
 });
+deactivateForm(form, 'ad-form--disabled');

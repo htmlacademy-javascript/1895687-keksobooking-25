@@ -1,5 +1,3 @@
-import {createAdverts} from './create-advert.js';
-
 const thesaurus = {
   'flat' : 'Квартира',
   'bungalow' : 'Бунгало',
@@ -9,12 +7,6 @@ const thesaurus = {
 };
 
 const hideElement = (element) => element.classList.add('hidden');  // returns undefined
-
-const adverts = createAdverts(1);
-
-const theAdvertTemplate = document.querySelector('#card').content;
-const theAdvertSample = theAdvertTemplate.querySelector('.popup');
-const fragment = document.createDocumentFragment();
 
 const fillAdvertElementWithData = (adElement, advertData) =>{
   const { author, offer } = advertData;
@@ -71,10 +63,4 @@ const fillAdvertElementWithData = (adElement, advertData) =>{
   avatarElement.src = avatar ? avatar : hideElement(avatarElement);
 };
 
-adverts.forEach((advert) => {
-  const newAdvertElement = theAdvertSample.cloneNode(true);
-  fillAdvertElementWithData(newAdvertElement, advert);
-  fragment.append(newAdvertElement);
-});
-
-document.querySelector('#map-canvas').append(fragment);
+export { fillAdvertElementWithData };
