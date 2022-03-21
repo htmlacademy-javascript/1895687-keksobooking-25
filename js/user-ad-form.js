@@ -1,4 +1,3 @@
-import { createLocation } from './create-location.js';
 import { deactivateForm } from './activity-toggling.js';
 
 const form = document.querySelector('.ad-form');
@@ -7,7 +6,6 @@ const priceField = form.querySelector('#price');
 const accomodation = form.querySelector('#type');
 const rooms = form.querySelector('#room_number');
 const capacity = form.querySelector('#capacity');
-const addressField = form.querySelector('#address');
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
 
@@ -114,11 +112,10 @@ const roomsChangingHandler = () => {
 rooms.addEventListener('change', roomsChangingHandler);
 
 form.addEventListener('submit', (evt) => {
-  const address = createLocation();
-  addressField.value = `${ address.lat }, ${ address.lng }`;
   const isValid = pristine.validate();
   if(!isValid){
     evt.preventDefault();
   }
 });
+
 deactivateForm(form, 'ad-form--disabled');
