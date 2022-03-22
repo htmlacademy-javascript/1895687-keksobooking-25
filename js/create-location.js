@@ -5,7 +5,7 @@ const createLocation = () => {
   const MAX_LATITUDE = 35.7;
   const MIN_LONGITUDE = 139.7;
   const MAX_LONGITUDE = 139.8;
-  const ACCURACY = 7;             //digits after the decimal point
+  const ACCURACY = 7;
 
   return {
     lat: generateFloat(MIN_LATITUDE, MAX_LATITUDE, ACCURACY),

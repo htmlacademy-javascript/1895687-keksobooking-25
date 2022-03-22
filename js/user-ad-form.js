@@ -52,7 +52,7 @@ noUiSlider.create(sliderElement, {
   connect: 'lower',
   format: {
     to: function(value){
-      return Number(value.toFixed(0));
+      return value.toFixed(0);
     },
     from: function(value){
       return Number(value);

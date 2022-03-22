@@ -9,11 +9,11 @@ const mapUnit = document.querySelector('#map-canvas');
 
 deactivateForm(filtersForm, 'map__filters--disabled');
 
-const locationOfTokyo = {
+const TOKYO_LOCATION = {
   lat: 35.6815574,
   lng: 139.7433043
 };
-const zoomLevel = 15;
+const INITIAL_ZOOM_LEVEL = 15;
 
 const mapLoadingHandler = () => {
   activateForm(filtersForm, 'map__filters--disabled');
@@ -22,7 +22,7 @@ const mapLoadingHandler = () => {
 
 const map = L.map(mapUnit).
   on('load', mapLoadingHandler).
-  setView(locationOfTokyo, zoomLevel);
+  setView(TOKYO_LOCATION, INITIAL_ZOOM_LEVEL);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -40,21 +40,21 @@ const commonMarkerIcon = L.icon({
   iconAnchor: [21, 42]
 });
 
-const mainMarker = L.marker(locationOfTokyo, {
+const mainMarker = L.marker(TOKYO_LOCATION, {
   icon: mainMarkerIcon,
   draggable:true
 }).addTo(map);
 
 const markerDraggingHandler = (evt) => {
   const location = evt.latlng;
-  const lat = +location.lat.toFixed(7);
-  const lng = +location.lng.toFixed(7);
+  const lat = location.lat.toFixed(7);
+  const lng = location.lng.toFixed(7);
   addressField.value = `${lat}, ${lng}`;
 };
 
 mainMarker.on('drag', markerDraggingHandler);
 
-addressField.value = `${locationOfTokyo.lat}, ${locationOfTokyo.lng}`;
+addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
 
 const advertsLayerGroup = L.layerGroup().addTo(map);
 
@@ -71,6 +71,6 @@ const createMarker = (data) => {
   }).bindPopup(createPopup(data)).addTo(advertsLayerGroup);
 };
 
-const adverts = createAdverts(10);
+const adverts = createAdverts();
 
 adverts.forEach((advert) => createMarker(advert));
