@@ -1,4 +1,4 @@
-const thesaurus = {
+const THESAURUS = {
   'flat' : 'Квартира',
   'bungalow' : 'Бунгало',
   'house':'Дом',
@@ -20,7 +20,7 @@ const fillAdvertElementWithData = (adElement, advertData) =>{
   const priceElement = adElement.querySelector('.popup__text--price');
   priceElement.textContent = price ? `${ price } ₽/ночь` : hideElement(priceElement);
   const typeElement = adElement.querySelector('.popup__type');
-  typeElement.textContent = type ? thesaurus[type] : hideElement(typeElement);
+  typeElement.textContent = type ? THESAURUS[type] : hideElement(typeElement);
   const visitors = guests ? guests : 0;
   const capacityElement = adElement.querySelector('.popup__text--capacity');
   capacityElement.textContent  = rooms ?

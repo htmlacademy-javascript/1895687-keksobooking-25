@@ -1,5 +1,13 @@
 import { deactivateForm } from './activity-toggling.js';
 
+const MIN_PRICE = {
+  'bungalow' : 0,
+  'flat' : 1000,
+  'hotel': 3000,
+  'house': 5000,
+  'palace': 10000
+};
+
 const form = document.querySelector('.ad-form');
 const fieldsCollection = form.querySelectorAll('input');
 const priceField = form.querySelector('#price');
@@ -9,14 +17,6 @@ const capacity = form.querySelector('#capacity');
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
 const sliderElement = form.querySelector('.ad-form__slider');
-
-const minPrice = {
-  'bungalow' : 0,
-  'flat' : 1000,
-  'hotel': 3000,
-  'house': 5000,
-  'palace': 10000
-};
 
 const fillUpStandartPristineAttributes = (field) => {
   if(field.hasAttribute('required')){
@@ -41,7 +41,7 @@ const pristine = new Pristine(form, {
   errorTextClass: 'ad-form__element--error'
 });
 
-priceField.setAttribute('min', minPrice[accomodation.value]);
+priceField.setAttribute('min', MIN_PRICE[accomodation.value]);
 
 noUiSlider.create(sliderElement, {
   range: {
@@ -102,11 +102,11 @@ const warnCapacityValidation = () => {
 
 pristine.addValidator(capacity, validateCapacity, warnCapacityValidation);
 
-priceField.setAttribute('placeholder', `от ${ minPrice[accomodation.value] }`);
+priceField.setAttribute('placeholder', `от ${ MIN_PRICE[accomodation.value] }`);
 
 const accomodationChangingHandler = (evt) => {
-  priceField.setAttribute('placeholder', `от ${ minPrice[evt.target.value] }`);
-  priceField.setAttribute('min', minPrice[evt.target.value]);
+  priceField.setAttribute('placeholder', `от ${ MIN_PRICE[evt.target.value] }`);
+  priceField.setAttribute('min', MIN_PRICE[evt.target.value]);
   if (priceField.value !== ''){
     pristine.validate(priceField);
   }
