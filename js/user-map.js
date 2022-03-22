@@ -45,14 +45,14 @@ const mainMarker = L.marker(locationOfTokyo, {
   draggable:true
 }).addTo(map);
 
-const markerDragingHandler = (evt) => {
+const markerDraggingHandler = (evt) => {
   const location = evt.latlng;
   const lat = +location.lat.toFixed(7);
   const lng = +location.lng.toFixed(7);
   addressField.value = `${lat}, ${lng}`;
 };
 
-mainMarker.on('drag', markerDragingHandler);
+mainMarker.on('drag', markerDraggingHandler);
 
 addressField.value = `${locationOfTokyo.lat}, ${locationOfTokyo.lng}`;
 
