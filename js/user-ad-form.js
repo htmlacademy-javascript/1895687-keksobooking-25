@@ -8,6 +8,7 @@ const rooms = form.querySelector('#room_number');
 const capacity = form.querySelector('#capacity');
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
+const sliderElement = form.querySelector('.ad-form__slider');
 
 const minPrice = {
   'bungalow' : 0,
@@ -41,6 +42,28 @@ const pristine = new Pristine(form, {
 });
 
 priceField.setAttribute('min', minPrice[accomodation.value]);
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: Number(priceField.max)
+  },
+  start: Number(priceField.min),
+  connect: 'lower',
+  format: {
+    to: function(value){
+      return Number(value.toFixed(0));
+    },
+    from: function(value){
+      return Number(value);
+    }
+  }
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  priceField.value = sliderElement.noUiSlider.get();
+  pristine.validate(priceField);
+});
 
 const validatePrice = (value) => Number(value) >= Number(priceField.min);
 
@@ -92,7 +115,8 @@ const accomodationChangingHandler = (evt) => {
 
 accomodation.addEventListener('change', accomodationChangingHandler);
 
-const priceChangingHandler = () => {
+const priceChangingHandler = (evt) => {
+  sliderElement.noUiSlider.set(evt.target.value);
   pristine.validate(priceField);
 };
 
