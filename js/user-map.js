@@ -2,18 +2,20 @@ import { activateForm, deactivateForm } from './activity-toggling.js';
 import { createAdverts } from './create-advert.js';
 import { fillAdvertElementWithData } from './ad-element-data-filling.js';
 
-const filtersForm = document.querySelector('.map__filters');
-const adForm = document.querySelector('.ad-form');
-const addressField = adForm.querySelector('#address');
-const mapUnit = document.querySelector('#map-canvas');
-
-deactivateForm(filtersForm, 'map__filters--disabled');
-
 const TOKYO_LOCATION = {
   lat: 35.6815574,
   lng: 139.7433043
 };
 const INITIAL_ZOOM_LEVEL = 15;
+const ADDRESS_ACCURACY = 7;
+
+const filtersForm = document.querySelector('.map__filters');
+const adForm = document.querySelector('.ad-form');
+const addressField = adForm.querySelector('#address');
+const mapUnit = document.querySelector('#map-canvas');
+const popupSample = document.querySelector('#card').content.querySelector('.popup');
+
+deactivateForm(filtersForm, 'map__filters--disabled');
 
 const mapLoadingHandler = () => {
   activateForm(filtersForm, 'map__filters--disabled');
@@ -47,8 +49,8 @@ const mainMarker = L.marker(TOKYO_LOCATION, {
 
 const markerDraggingHandler = (evt) => {
   const location = evt.latlng;
-  const lat = location.lat.toFixed(7);
-  const lng = location.lng.toFixed(7);
+  const lat = location.lat.toFixed(ADDRESS_ACCURACY);
+  const lng = location.lng.toFixed(ADDRESS_ACCURACY);
   addressField.value = `${lat}, ${lng}`;
 };
 
@@ -59,7 +61,6 @@ addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
 const advertsLayerGroup = L.layerGroup().addTo(map);
 
 const createPopup = (data) => {
-  const popupSample = document.querySelector('#card').content.querySelector('.popup');
   const newPopup = popupSample.cloneNode(true);
   fillAdvertElementWithData(newPopup, data);
   return newPopup;

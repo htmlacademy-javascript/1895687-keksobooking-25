@@ -86,7 +86,6 @@ const capacityLowLimit = getExtremNumberValue(capacity.children, false);
 
 const validateCapacity = (value) => {
   const notForGuests = Number(rooms.value) === roomsHighLimit && Number(value) === capacityLowLimit;
-  // forGuests != !notForGuests ( !(a & b) = !a | !b )
   const forGuests = Number(rooms.value) !== roomsHighLimit && Number(value) !== capacityLowLimit;
   return notForGuests || forGuests && Number(value) <= Number(rooms.value);
 };
