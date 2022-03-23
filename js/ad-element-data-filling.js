@@ -1,6 +1,4 @@
-import {createAdverts} from './create-advert.js';
-
-const thesaurus = {
+const THESAURUS = {
   'flat' : 'Квартира',
   'bungalow' : 'Бунгало',
   'house':'Дом',
@@ -9,12 +7,6 @@ const thesaurus = {
 };
 
 const hideElement = (element) => element.classList.add('hidden');  // returns undefined
-
-const adverts = createAdverts(1);
-
-const theAdvertTemplate = document.querySelector('#card').content;
-const theAdvertSample = theAdvertTemplate.querySelector('.popup');
-const fragment = document.createDocumentFragment();
 
 const fillAdvertElementWithData = (adElement, advertData) =>{
   const { author, offer } = advertData;
@@ -28,7 +20,7 @@ const fillAdvertElementWithData = (adElement, advertData) =>{
   const priceElement = adElement.querySelector('.popup__text--price');
   priceElement.textContent = price ? `${ price } ₽/ночь` : hideElement(priceElement);
   const typeElement = adElement.querySelector('.popup__type');
-  typeElement.textContent = type ? thesaurus[type] : hideElement(typeElement);
+  typeElement.textContent = type ? THESAURUS[type] : hideElement(typeElement);
   const visitors = guests ? guests : 0;
   const capacityElement = adElement.querySelector('.popup__text--capacity');
   capacityElement.textContent  = rooms ?
@@ -71,10 +63,4 @@ const fillAdvertElementWithData = (adElement, advertData) =>{
   avatarElement.src = avatar ? avatar : hideElement(avatarElement);
 };
 
-adverts.forEach((advert) => {
-  const newAdvertElement = theAdvertSample.cloneNode(true);
-  fillAdvertElementWithData(newAdvertElement, advert);
-  fragment.append(newAdvertElement);
-});
-
-document.querySelector('#map-canvas').append(fragment);
+export { fillAdvertElementWithData };

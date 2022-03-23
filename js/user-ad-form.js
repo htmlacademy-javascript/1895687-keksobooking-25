@@ -1,4 +1,12 @@
-import { createLocation } from './create-location.js';
+import { deactivateForm } from './activity-toggling.js';
+
+const MIN_PRICE = {
+  'bungalow' : 0,
+  'flat' : 1000,
+  'hotel': 3000,
+  'house': 5000,
+  'palace': 10000
+};
 
 const form = document.querySelector('.ad-form');
 const fieldsCollection = form.querySelectorAll('input');
@@ -6,17 +14,9 @@ const priceField = form.querySelector('#price');
 const accomodation = form.querySelector('#type');
 const rooms = form.querySelector('#room_number');
 const capacity = form.querySelector('#capacity');
-const addressField = form.querySelector('#address');
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
-
-const minPrice = {
-  'bungalow' : 0,
-  'flat' : 1000,
-  'hotel': 3000,
-  'house': 5000,
-  'palace': 10000
-};
+const sliderElement = form.querySelector('.ad-form__slider');
 
 const fillUpStandartPristineAttributes = (field) => {
   if(field.hasAttribute('required')){
@@ -41,7 +41,29 @@ const pristine = new Pristine(form, {
   errorTextClass: 'ad-form__element--error'
 });
 
-priceField.setAttribute('min', minPrice[accomodation.value]);
+priceField.setAttribute('min', MIN_PRICE[accomodation.value]);
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: Number(priceField.max)
+  },
+  start: Number(priceField.min),
+  connect: 'lower',
+  format: {
+    to: function(value){
+      return value.toFixed(0);
+    },
+    from: function(value){
+      return Number(value);
+    }
+  }
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  priceField.value = sliderElement.noUiSlider.get();
+  pristine.validate(priceField);
+});
 
 const validatePrice = (value) => Number(value) >= Number(priceField.min);
 
@@ -49,35 +71,30 @@ const warnPriceValidation = () => `Цена слишком низкая, мин�
 
 pristine.addValidator(priceField, validatePrice, warnPriceValidation);
 
-// I would have done a couple below via .reduce() if there had been the opportunity
-const roomsOptions = rooms.children;
-let roomsHighLimit = -Infinity;
-for(const option of roomsOptions){
-  if(Number(option.value) > roomsHighLimit){
-    roomsHighLimit = Number(option.value);
+const getExtremNumberValue = (elements, high) => {
+  let result = high ? -Infinity : Infinity;
+  for(const element of elements){
+    result = high && Number(element.value) > result || !high && Number(element.value) < result ?
+      Number(element.value) :
+      result;
   }
-}
+  return result;
+};
 
-const capacityOptions = capacity.children;
-let capacityLowLimit = Infinity;
-for(const option of capacityOptions){
-  if(Number(option.value) < capacityLowLimit){
-    capacityLowLimit = Number(option.value);
-  }
-}
+const roomsHighLimit = getExtremNumberValue(rooms.children, true);
+const capacityLowLimit = getExtremNumberValue(capacity.children, false);
 
 const validateCapacity = (value) => {
   const notForGuests = Number(rooms.value) === roomsHighLimit && Number(value) === capacityLowLimit;
-  // forGuests != !notForGuests ( !(a & b) = !a | !b )
   const forGuests = Number(rooms.value) !== roomsHighLimit && Number(value) !== capacityLowLimit;
   return notForGuests || forGuests && Number(value) <= Number(rooms.value);
 };
 
 const warnCapacityValidation = () => {
-  if(+capacity.value > +rooms.value){
+  if(Number(capacity.value) > Number(rooms.value)){
     return 'Гостей не должно быть больше, чем комнат';
   }
-  if(+capacity.value === 0){
+  if(Number(capacity.value) === 0){
     return 'Должен быть хоть 1 гость';
   }
   return 'Данная конфигурация не для гостей';
@@ -85,11 +102,11 @@ const warnCapacityValidation = () => {
 
 pristine.addValidator(capacity, validateCapacity, warnCapacityValidation);
 
-priceField.setAttribute('placeholder', `от ${ minPrice[accomodation.value] }`);
+priceField.setAttribute('placeholder', `от ${ MIN_PRICE[accomodation.value] }`);
 
 const accomodationChangingHandler = (evt) => {
-  priceField.setAttribute('placeholder', `от ${ minPrice[evt.target.value] }`);
-  priceField.setAttribute('min', minPrice[evt.target.value]);
+  priceField.setAttribute('placeholder', `от ${ MIN_PRICE[evt.target.value] }`);
+  priceField.setAttribute('min', MIN_PRICE[evt.target.value]);
   if (priceField.value !== ''){
     pristine.validate(priceField);
   }
@@ -97,7 +114,8 @@ const accomodationChangingHandler = (evt) => {
 
 accomodation.addEventListener('change', accomodationChangingHandler);
 
-const priceChangingHandler = () => {
+const priceChangingHandler = (evt) => {
+  sliderElement.noUiSlider.set(evt.target.value);
   pristine.validate(priceField);
 };
 
@@ -117,10 +135,10 @@ const roomsChangingHandler = () => {
 rooms.addEventListener('change', roomsChangingHandler);
 
 form.addEventListener('submit', (evt) => {
-  const address = createLocation();
-  addressField.value = `${ address.lat }, ${ address.lng }`;
   const isValid = pristine.validate();
   if(!isValid){
     evt.preventDefault();
   }
 });
+
+deactivateForm(form, 'ad-form--disabled');
