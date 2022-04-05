@@ -1059,3 +1059,13 @@ fieldset {
 .hidden {
   display: none;
 }
+
+.load-error {
+  z-index: 1000;
+  width: 100%;
+  padding: 10px 3px;
+  font-size : 30px;
+  text-align: center;
+
+  background-color: rgba(233, 200, 14, 0.8);
+}

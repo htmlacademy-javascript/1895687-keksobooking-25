@@ -7,7 +7,9 @@ const getData = (successHandler, errorHandler) =>
       throw new Error(`${response.status} ${response.statusText}`);
     })
     .then(successHandler)
-    .catch(errorHandler);
+    .catch((err) => {
+      errorHandler(`Проблема с загрузкой данных : ${err.message}`);
+    });
 
 
 const sendData = (succeessHandler, errorHandler, data) =>
