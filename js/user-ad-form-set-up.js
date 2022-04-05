@@ -1,12 +1,10 @@
 import { deactivateForm } from './activity-toggling.js';
-
-const MIN_PRICE = {
-  'bungalow' : 0,
-  'flat' : 1000,
-  'hotel': 3000,
-  'house': 5000,
-  'palace': 10000
-};
+import { sendData } from './communication.js';
+import {
+  MIN_PRICE,
+  fillUpStandartPristineAttributes,
+  getExtremNumberValue
+} from './user-ad-form-validation-utils.js';
 
 const form = document.querySelector('.ad-form');
 const fieldsCollection = form.querySelectorAll('input');
@@ -16,22 +14,8 @@ const rooms = form.querySelector('#room_number');
 const capacity = form.querySelector('#capacity');
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
+const submitButton = form.querySelector('.ad-form__submit');
 const sliderElement = form.querySelector('.ad-form__slider');
-
-const fillUpStandartPristineAttributes = (field) => {
-  if(field.hasAttribute('required')){
-    field.dataset.pristineRequiredMessage = 'Это поле должно быть заполнено';
-  }
-  if(field.hasAttribute('minLength')){
-    field.dataset.pristineMinlengthMessage = `Минимальная длина ${field.minLength} символов`;
-  }
-  if(field.hasAttribute('maxLength')){
-    field.dataset.pristineMaxlengthMessage = `Максимальная длина ${field.maxLength} символов`;
-  }
-  if(field.hasAttribute('max')){
-    field.dataset.pristineMaxMessage = `Максимальное допустимое значение: ${field.max}`;
-  }
-};
 
 fieldsCollection.forEach((field) => fillUpStandartPristineAttributes(field));
 
@@ -70,16 +54,6 @@ const validatePrice = (value) => Number(value) >= Number(priceField.min);
 const warnPriceValidation = () => `Цена слишком низкая, минимальная: ${ priceField.min }`;
 
 pristine.addValidator(priceField, validatePrice, warnPriceValidation);
-
-const getExtremNumberValue = (elements, high) => {
-  let result = high ? -Infinity : Infinity;
-  for(const element of elements){
-    result = high && Number(element.value) > result || !high && Number(element.value) < result ?
-      Number(element.value) :
-      result;
-  }
-  return result;
-};
 
 const roomsHighLimit = getExtremNumberValue(rooms.children, true);
 const capacityLowLimit = getExtremNumberValue(capacity.children, false);
@@ -121,9 +95,9 @@ const priceChangingHandler = (evt) => {
 
 priceField.addEventListener('change', priceChangingHandler);
 
-const timeChangingHandler = function(evt){
+function timeChangingHandler(evt){
   this.value = evt.target.value;
-};
+}
 
 timeIn.addEventListener('change', timeChangingHandler.bind(timeOut));
 timeOut.addEventListener('change', timeChangingHandler.bind(timeIn));
@@ -134,11 +108,43 @@ const roomsChangingHandler = () => {
 
 rooms.addEventListener('change', roomsChangingHandler);
 
-form.addEventListener('submit', (evt) => {
-  const isValid = pristine.validate();
-  if(!isValid){
+const blockSubmitButton = () => {
+  submitButton.setAttribute('disabled','true');
+  submitButton.textContent = 'Публикация...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.removeAttribute('disabled');
+  submitButton.textContent = 'Опубликовать';
+};
+
+const setUserAdFormSubmit = (successHandler, errorHandler) => {
+  form.addEventListener('submit', (evt) => {
     evt.preventDefault();
-  }
-});
+    const isValid = pristine.validate();
+    if(isValid){
+      blockSubmitButton();
+      sendData(
+        () => {
+          successHandler();
+          unblockSubmitButton();
+        },
+        () => {
+          errorHandler();
+          unblockSubmitButton();
+        },
+        new FormData(evt.target)
+      );
+    }
+  });
+};
+
+const resetPriceInput = () => {
+  priceField.setAttribute('min', MIN_PRICE[accomodation.value]);
+  priceField.setAttribute('placeholder', `от ${ MIN_PRICE[accomodation.value] }`);
+  sliderElement.noUiSlider.set(MIN_PRICE[accomodation.value]);
+};
 
 deactivateForm(form, 'ad-form--disabled');
+
+export { setUserAdFormSubmit, resetPriceInput };

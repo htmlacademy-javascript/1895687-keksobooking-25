@@ -1,10 +1,9 @@
 import { activateForm, deactivateForm } from './activity-toggling.js';
-import { createAdverts } from './create-advert.js';
 import { fillAdvertElementWithData } from './ad-element-data-filling.js';
 
 const TOKYO_LOCATION = {
-  lat: 35.6815574,
-  lng: 139.7433043
+  lat: 35.6838768,
+  lng: 139.7547148
 };
 const INITIAL_ZOOM_LEVEL = 15;
 const ADDRESS_ACCURACY = 7;
@@ -31,15 +30,15 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
 }).addTo(map);
 
 const mainMarkerIcon = L.icon({
-  iconUrl:    '../img/main-pin.svg',
-  iconSize:   [42, 42],
-  iconAnchor: [21, 42]
+  iconUrl:    '/img/main-pin.svg',
+  iconSize:   [52, 52],
+  iconAnchor: [26, 52]
 });
 
 const commonMarkerIcon = L.icon({
-  iconUrl:    '../img/pin.svg',
-  iconSize:   [42, 42],
-  iconAnchor: [21, 42]
+  iconUrl:    '/img/pin.svg',
+  iconSize:   [40, 40],
+  iconAnchor: [20, 40]
 });
 
 const mainMarker = L.marker(TOKYO_LOCATION, {
@@ -58,6 +57,11 @@ mainMarker.on('drag', markerDraggingHandler);
 
 addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
 
+const resetMainMarker = () => {
+  mainMarker.setLatLng(TOKYO_LOCATION);
+  addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
+};
+
 const advertsLayerGroup = L.layerGroup().addTo(map);
 
 const createPopup = (data) => {
@@ -72,6 +76,13 @@ const createMarker = (data) => {
   }).bindPopup(createPopup(data)).addTo(advertsLayerGroup);
 };
 
-const adverts = createAdverts();
+const createMarkers = (data) => data.forEach((item) => createMarker(item));
+const deleteMarkers = () => advertsLayerGroup.clearLayers();
+const closePopup = () => map.closePopup();
 
-adverts.forEach((advert) => createMarker(advert));
+export {
+  resetMainMarker,
+  createMarkers,
+  deleteMarkers,
+  closePopup
+};
