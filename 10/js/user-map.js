@@ -5,6 +5,10 @@ const TOKYO_LOCATION = {
   lat: 35.6838768,
   lng: 139.7547148
 };
+
+const MAIN_MARKER_SIZE = 52;
+const COMMON_MARKER_SIZE = 40;
+
 const INITIAL_ZOOM_LEVEL = 15;
 const ADDRESS_ACCURACY = 7;
 
@@ -17,7 +21,6 @@ const popupSample = document.querySelector('#card').content.querySelector('.popu
 deactivateForm(filtersForm, 'map__filters--disabled');
 
 const mapLoadingHandler = () => {
-  activateForm(filtersForm, 'map__filters--disabled');
   activateForm(adForm, 'ad-form--disabled');
 };
 
@@ -30,15 +33,15 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
 }).addTo(map);
 
 const mainMarkerIcon = L.icon({
-  iconUrl:    '/img/main-pin.svg',
-  iconSize:   [52, 52],
-  iconAnchor: [26, 52]
+  iconUrl:    'img/main-pin.svg',
+  iconSize:   [MAIN_MARKER_SIZE, MAIN_MARKER_SIZE],
+  iconAnchor: [MAIN_MARKER_SIZE/2, MAIN_MARKER_SIZE]
 });
 
 const commonMarkerIcon = L.icon({
-  iconUrl:    '/img/pin.svg',
-  iconSize:   [40, 40],
-  iconAnchor: [20, 40]
+  iconUrl:    'img/pin.svg',
+  iconSize:   [COMMON_MARKER_SIZE, COMMON_MARKER_SIZE],
+  iconAnchor: [COMMON_MARKER_SIZE/2, COMMON_MARKER_SIZE]
 });
 
 const mainMarker = L.marker(TOKYO_LOCATION, {
@@ -76,7 +79,10 @@ const createMarker = (data) => {
   }).bindPopup(createPopup(data)).addTo(advertsLayerGroup);
 };
 
-const createMarkers = (data) => data.forEach((item) => createMarker(item));
+const createMarkers = (data) => {
+  data.forEach((item) => createMarker(item));
+  activateForm(filtersForm, 'map__filters--disabled');
+};
 const deleteMarkers = () => advertsLayerGroup.clearLayers();
 const closePopup = () => map.closePopup();
 
