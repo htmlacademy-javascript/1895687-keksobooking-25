@@ -17,7 +17,10 @@ const generateArrayFrom = (count, donor) => {
   return array;
 };
 
+const getArrayCutTo = (array, count) => array.length > count ? array.slice(0, count) : array;
+
 export{
   getAnElement,
-  generateArrayFrom
+  generateArrayFrom,
+  getArrayCutTo
 };

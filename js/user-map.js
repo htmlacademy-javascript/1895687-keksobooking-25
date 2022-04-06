@@ -79,16 +79,15 @@ const createMarker = (data) => {
   }).bindPopup(createPopup(data)).addTo(advertsLayerGroup);
 };
 
-const createMarkers = (data) => {
-  data.forEach((item) => createMarker(item));
-  activateForm(filtersForm, 'map__filters--disabled');
-};
+const createMarkers = (data) => data.forEach((item) => createMarker(item));
+const activateFiltersForm = () => activateForm(filtersForm, 'map__filters--disabled');
 const deleteMarkers = () => advertsLayerGroup.clearLayers();
 const closePopup = () => map.closePopup();
 
 export {
   resetMainMarker,
   createMarkers,
+  activateFiltersForm,
   deleteMarkers,
   closePopup
 };
