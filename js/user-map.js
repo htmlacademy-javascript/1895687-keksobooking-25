@@ -1,11 +1,14 @@
 import { activateForm, deactivateForm } from './activity-toggling.js';
-import { createAdverts } from './create-advert.js';
 import { fillAdvertElementWithData } from './ad-element-data-filling.js';
 
 const TOKYO_LOCATION = {
-  lat: 35.6815574,
-  lng: 139.7433043
+  lat: 35.6838768,
+  lng: 139.7547148
 };
+
+const MAIN_MARKER_SIZE = 52;
+const COMMON_MARKER_SIZE = 40;
+
 const INITIAL_ZOOM_LEVEL = 15;
 const ADDRESS_ACCURACY = 7;
 
@@ -18,7 +21,6 @@ const popupSample = document.querySelector('#card').content.querySelector('.popu
 deactivateForm(filtersForm, 'map__filters--disabled');
 
 const mapLoadingHandler = () => {
-  activateForm(filtersForm, 'map__filters--disabled');
   activateForm(adForm, 'ad-form--disabled');
 };
 
@@ -31,15 +33,15 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
 }).addTo(map);
 
 const mainMarkerIcon = L.icon({
-  iconUrl:    '../img/main-pin.svg',
-  iconSize:   [42, 42],
-  iconAnchor: [21, 42]
+  iconUrl:    'img/main-pin.svg',
+  iconSize:   [MAIN_MARKER_SIZE, MAIN_MARKER_SIZE],
+  iconAnchor: [MAIN_MARKER_SIZE/2, MAIN_MARKER_SIZE]
 });
 
 const commonMarkerIcon = L.icon({
-  iconUrl:    '../img/pin.svg',
-  iconSize:   [42, 42],
-  iconAnchor: [21, 42]
+  iconUrl:    'img/pin.svg',
+  iconSize:   [COMMON_MARKER_SIZE, COMMON_MARKER_SIZE],
+  iconAnchor: [COMMON_MARKER_SIZE/2, COMMON_MARKER_SIZE]
 });
 
 const mainMarker = L.marker(TOKYO_LOCATION, {
@@ -58,6 +60,11 @@ mainMarker.on('drag', markerDraggingHandler);
 
 addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
 
+const resetMainMarker = () => {
+  mainMarker.setLatLng(TOKYO_LOCATION);
+  addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
+};
+
 const advertsLayerGroup = L.layerGroup().addTo(map);
 
 const createPopup = (data) => {
@@ -72,6 +79,16 @@ const createMarker = (data) => {
   }).bindPopup(createPopup(data)).addTo(advertsLayerGroup);
 };
 
-const adverts = createAdverts();
+const createMarkers = (data) => {
+  data.forEach((item) => createMarker(item));
+  activateForm(filtersForm, 'map__filters--disabled');
+};
+const deleteMarkers = () => advertsLayerGroup.clearLayers();
+const closePopup = () => map.closePopup();
 
-adverts.forEach((advert) => createMarker(advert));
+export {
+  resetMainMarker,
+  createMarkers,
+  deleteMarkers,
+  closePopup
+};
