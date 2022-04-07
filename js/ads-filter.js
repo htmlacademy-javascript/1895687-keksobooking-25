@@ -113,3 +113,16 @@ const featuresChangingHandler = (evt) => {
 
 filtersForm.addEventListener('change', selectorChanginHandler);
 featuresSet.addEventListener('change', featuresChangingHandler);
+
+const resetCriteria = () => {
+  criteria.accomodationType = 'any';
+  criteria.price = 'any';
+  criteria.rooms = 'any';
+  criteria.guests = 'any';
+  criteria.features = [];
+};
+
+export {
+  renderChosen,
+  resetCriteria
+};
