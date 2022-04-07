@@ -9,7 +9,7 @@ import {
   POSSIBLE_PHOTOS,
   POSSIBLE_TITLES,
   POSSIBLE_DESCRIPTIONS
-} from './data.js';
+} from './generating-data.js';
 import { getAnElement, generateArrayFrom } from './array-utils.js';
 import { createLocation } from './create-location.js';
 import { generateInteger } from './number-generators.js';

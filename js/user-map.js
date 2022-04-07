@@ -18,19 +18,7 @@ const addressField = adForm.querySelector('#address');
 const mapUnit = document.querySelector('#map-canvas');
 const popupSample = document.querySelector('#card').content.querySelector('.popup');
 
-deactivateForm(filtersForm, 'map__filters--disabled');
-
-const mapLoadingHandler = () => {
-  activateForm(adForm, 'ad-form--disabled');
-};
-
-const map = L.map(mapUnit).
-  on('load', mapLoadingHandler).
-  setView(TOKYO_LOCATION, INITIAL_ZOOM_LEVEL);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+const map = L.map(mapUnit);
 
 const mainMarkerIcon = L.icon({
   iconUrl:    'img/main-pin.svg',
@@ -47,7 +35,15 @@ const commonMarkerIcon = L.icon({
 const mainMarker = L.marker(TOKYO_LOCATION, {
   icon: mainMarkerIcon,
   draggable:true
-}).addTo(map);
+});
+
+const advertsLayerGroup = L.layerGroup().addTo(map);
+
+deactivateForm(filtersForm, 'map__filters--disabled');
+
+const mapLoadingHandler = () => {
+  activateForm(adForm, 'ad-form--disabled');
+};
 
 const markerDraggingHandler = (evt) => {
   const location = evt.latlng;
@@ -56,16 +52,24 @@ const markerDraggingHandler = (evt) => {
   addressField.value = `${lat}, ${lng}`;
 };
 
-mainMarker.on('drag', markerDraggingHandler);
+const initialiseMap = () =>{
+  map
+    .on('load', mapLoadingHandler)
+    .setView(TOKYO_LOCATION, INITIAL_ZOOM_LEVEL);
 
-addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  mainMarker.on('drag', markerDraggingHandler).addTo(map);
+
+  addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
+};
 
 const resetMainMarker = () => {
   mainMarker.setLatLng(TOKYO_LOCATION);
   addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
 };
-
-const advertsLayerGroup = L.layerGroup().addTo(map);
 
 const createPopup = (data) => {
   const newPopup = popupSample.cloneNode(true);
@@ -79,16 +83,16 @@ const createMarker = (data) => {
   }).bindPopup(createPopup(data)).addTo(advertsLayerGroup);
 };
 
-const createMarkers = (data) => {
-  data.forEach((item) => createMarker(item));
-  activateForm(filtersForm, 'map__filters--disabled');
-};
+const createMarkers = (data) => data.forEach((item) => createMarker(item));
+const activateFiltersForm = () => activateForm(filtersForm, 'map__filters--disabled');
 const deleteMarkers = () => advertsLayerGroup.clearLayers();
 const closePopup = () => map.closePopup();
 
 export {
+  initialiseMap,
   resetMainMarker,
   createMarkers,
+  activateFiltersForm,
   deleteMarkers,
   closePopup
 };
