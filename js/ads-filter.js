@@ -2,6 +2,7 @@ import { getArrayCutTo } from './array-utils.js';
 import { getData } from './communication.js';
 import { showLoadErrorMessage } from './show-error.js';
 import { createMarkers, deleteMarkers, closePopup } from './user-map.js';
+import { debounce } from './async-utils.js';
 
 const MARKERS_COUNT = 10;
 const RERENDER_DELAY = 500;
@@ -67,14 +68,6 @@ const showFilteredAds = () =>{
   );
 };
 
-const debounce = (callback, delay = 500) => {
-  let timeoutId;
-  return (...rest) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(()=>callback.apply(this, rest), delay);
-  };
-};
-
 const renderChosen = debounce(showFilteredAds, RERENDER_DELAY);
 
 const selectorChanginHandler = (evt) => {
@@ -120,9 +113,9 @@ const resetCriteria = () => {
   criteria.rooms = 'any';
   criteria.guests = 'any';
   criteria.features = [];
+  renderChosen();
 };
 
 export {
-  renderChosen,
   resetCriteria
 };

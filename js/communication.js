@@ -27,5 +27,5 @@ const sendData = (succeessHandler, errorHandler, data) =>
     })
     .catch(errorHandler);
 
-export {getData, sendData};
+export { getData, sendData };
 
