@@ -4,7 +4,7 @@ import { showLoadErrorMessage } from './show-error.js';
 import { createMarkers, deleteMarkers, closePopup } from './user-map.js';
 
 const MARKERS_COUNT = 10;
-const DELAY = 500;
+const RERENDER_DELAY = 500;
 const MIDDLE_PRICE_LINE = 10000;
 const HIGH_PRICE_LINE = 50000;
 
@@ -67,7 +67,15 @@ const showFilteredAds = () =>{
   );
 };
 
-let timeoutId;
+const debounce = (callback, delay = 500) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(()=>callback.apply(this, rest), delay);
+  };
+};
+
+const renderChosen = debounce(showFilteredAds, RERENDER_DELAY);
 
 const selectorChanginHandler = (evt) => {
   const target = evt.target;
@@ -84,10 +92,7 @@ const selectorChanginHandler = (evt) => {
     if(target.matches('#housing-guests')){
       criteria.guests = target.value;
     }
-    if(timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(showFilteredAds, DELAY);
+    renderChosen();
     evt.stopPropagation();
   }
 };
@@ -101,10 +106,7 @@ const featuresChangingHandler = (evt) => {
       const index = criteria.features.indexOf(evt.target.value);
       criteria.features.splice(index, 1);
     }
-    if(timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(showFilteredAds, DELAY);
+    renderChosen();
     evt.stopPropagation();
   }
 };
