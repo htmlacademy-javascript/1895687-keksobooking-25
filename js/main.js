@@ -11,8 +11,8 @@ initialiseMap();
 
 getData(
   (data) => {
-    dataStorage.saveData(data);
-    createMarkers(getArrayCutTo(dataStorage.getData(), MARKERS_COUNT));
+    dataStorage.save(data);
+    createMarkers(getArrayCutTo(dataStorage.get(), MARKERS_COUNT));
     activateFiltersForm();
   },
   showLoadErrorMessage

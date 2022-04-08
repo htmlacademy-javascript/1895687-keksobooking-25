@@ -47,8 +47,8 @@ const criteria = (() => {
   };
 })();
 
-const filtersForm = document.querySelector('.map__filters');
-const featuresSet = filtersForm.querySelector('#housing-features');
+const filtersFormElement = document.querySelector('.map__filters');
+const featuresSetElement = filtersFormElement.querySelector('#housing-features');
 
 const filterAccomodationType = (element) => criteria.isAnyType() ||
   element.offer.type === criteria.getType();
@@ -93,7 +93,7 @@ const prepareRendering = () => {
 
 const renderingHandler = () => {
   prepareRendering();
-  const filteredData = filterDataWithTheCriteria(dataStorage.getData());
+  const filteredData = filterDataWithTheCriteria(dataStorage.get());
   createMarkers(getArrayCutTo(filteredData, MARKERS_COUNT));
 };
 
@@ -101,10 +101,10 @@ const renderChosen = debounce(renderingHandler, RERENDER_DELAY);
 
 const renderUnfiltered = () => {
   prepareRendering();
-  createMarkers(getArrayCutTo(dataStorage.getData(), MARKERS_COUNT));
+  createMarkers(getArrayCutTo(dataStorage.get(), MARKERS_COUNT));
 };
 
-const selectorChanginHandler = (evt) => {
+const selectsChanginHandler = (evt) => {
   const target = evt.target;
   if(target.matches('select')){
     if(target.matches('#housing-type')){
@@ -137,8 +137,8 @@ const featuresChangingHandler = (evt) => {
   }
 };
 
-filtersForm.addEventListener('change', selectorChanginHandler);
-featuresSet.addEventListener('change', featuresChangingHandler);
+filtersFormElement.addEventListener('change', selectsChanginHandler);
+featuresSetElement.addEventListener('change', featuresChangingHandler);
 
 const resetCriteria = () => {
   criteria.reset();

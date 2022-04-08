@@ -6,18 +6,18 @@ const typeToMinPrice = {
   'palace': 10000
 };
 
-const fillUpStandartPristineAttributes = (field) => {
-  if(field.hasAttribute('required')){
-    field.dataset.pristineRequiredMessage = 'Это поле должно быть заполнено';
+const fillUpStandartPristineAttributes = (element) => {
+  if(element.hasAttribute('required')){
+    element.dataset.pristineRequiredMessage = 'Это поле должно быть заполнено';
   }
-  if(field.hasAttribute('minLength')){
-    field.dataset.pristineMinlengthMessage = `Минимальная длина ${field.minLength} символов`;
+  if(element.hasAttribute('minLength')){
+    element.dataset.pristineMinlengthMessage = `Минимальная длина ${element.minLength} символов`;
   }
-  if(field.hasAttribute('maxLength')){
-    field.dataset.pristineMaxlengthMessage = `Максимальная длина ${field.maxLength} символов`;
+  if(element.hasAttribute('maxLength')){
+    element.dataset.pristineMaxlengthMessage = `Максимальная длина ${element.maxLength} символов`;
   }
-  if(field.hasAttribute('max')){
-    field.dataset.pristineMaxMessage = `Максимальное допустимое значение: ${field.max}`;
+  if(element.hasAttribute('max')){
+    element.dataset.pristineMaxMessage = `Максимальное допустимое значение: ${element.max}`;
   }
 };
 
