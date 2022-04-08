@@ -1,4 +1,5 @@
-import { renderChosen, resetCriteria } from './ads-filter.js';
+import { resetCriteria } from './ads-filter.js';
+import { resetImages } from './upload-images.js';
 import { resetPriceInput } from './user-ad-form-set-up.js';
 import { resetMainMarker, closePopup } from './user-map.js';
 
@@ -32,8 +33,8 @@ const resetDocument = () => {
   description.value = '';
   closePopup();
   resetMainMarker();
+  resetImages();
   resetCriteria();
-  renderChosen();
 };
 
 resetButton.addEventListener('click', (evt)=>{
