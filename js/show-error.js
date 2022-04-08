@@ -1,5 +1,6 @@
+const SHOW_TIME = 3000;
+
 const showLoadErrorMessage = (message) => {
-  const SHOW_TIME = 3000;
 
   const errorElement = document.createElement('div');
   errorElement.classList.add('load-error');

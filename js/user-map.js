@@ -12,13 +12,13 @@ const COMMON_MARKER_SIZE = 40;
 const INITIAL_ZOOM_LEVEL = 15;
 const ADDRESS_ACCURACY = 7;
 
-const filtersForm = document.querySelector('.map__filters');
-const adForm = document.querySelector('.ad-form');
-const addressField = adForm.querySelector('#address');
-const mapUnit = document.querySelector('#map-canvas');
-const popupSample = document.querySelector('#card').content.querySelector('.popup');
+const filtersFormElement = document.querySelector('.map__filters');
+const adFormElement = document.querySelector('.ad-form');
+const addressFieldElement = adFormElement.querySelector('#address');
+const mapElement = document.querySelector('#map-canvas');
+const popupElementSample = document.querySelector('#card').content.querySelector('.popup');
 
-const map = L.map(mapUnit);
+const map = L.map(mapElement);
 
 const mainMarkerIcon = L.icon({
   iconUrl:    'img/main-pin.svg',
@@ -39,17 +39,17 @@ const mainMarker = L.marker(TOKYO_LOCATION, {
 
 const advertsLayerGroup = L.layerGroup().addTo(map);
 
-deactivateForm(filtersForm, 'map__filters--disabled');
+deactivateForm(filtersFormElement, 'map__filters--disabled');
 
 const mapLoadingHandler = () => {
-  activateForm(adForm, 'ad-form--disabled');
+  activateForm(adFormElement, 'ad-form--disabled');
 };
 
 const markerDraggingHandler = (evt) => {
   const location = evt.latlng;
   const lat = location.lat.toFixed(ADDRESS_ACCURACY);
   const lng = location.lng.toFixed(ADDRESS_ACCURACY);
-  addressField.value = `${lat}, ${lng}`;
+  addressFieldElement.value = `${lat}, ${lng}`;
 };
 
 const initialiseMap = () =>{
@@ -63,18 +63,18 @@ const initialiseMap = () =>{
 
   mainMarker.on('drag', markerDraggingHandler).addTo(map);
 
-  addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
+  addressFieldElement.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
 };
 
 const resetMainMarker = () => {
   mainMarker.setLatLng(TOKYO_LOCATION);
-  addressField.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
+  addressFieldElement.value = `${TOKYO_LOCATION.lat}, ${TOKYO_LOCATION.lng}`;
 };
 
 const createPopup = (data) => {
-  const newPopup = popupSample.cloneNode(true);
-  fillAdvertElementWithData(newPopup, data);
-  return newPopup;
+  const newPopupElement = popupElementSample.cloneNode(true);
+  fillAdvertElementWithData(newPopupElement, data);
+  return newPopupElement;
 };
 
 const createMarker = (data) => {
@@ -84,7 +84,7 @@ const createMarker = (data) => {
 };
 
 const createMarkers = (data) => data.forEach((item) => createMarker(item));
-const activateFiltersForm = () => activateForm(filtersForm, 'map__filters--disabled');
+const activateFiltersForm = () => activateForm(filtersFormElement, 'map__filters--disabled');
 const deleteMarkers = () => advertsLayerGroup.clearLayers();
 const closePopup = () => map.closePopup();
 

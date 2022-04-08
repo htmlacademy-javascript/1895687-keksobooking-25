@@ -2,66 +2,48 @@ import { resetDocument } from './document-reset.js';
 
 const ESC_CODE = 27;
 
-const successMessageSample = document.querySelector('#success')
+const successElementSample = document.querySelector('#success')
   .content
   .querySelector('.success');
 
-const errorMessageSample = document.querySelector('#error')
+const errorElementSample = document.querySelector('#error')
   .content
   .querySelector('.error');
 
-const constructSuccessElement = () => {
-  const successElement = successMessageSample.cloneNode(true);
+const createStatusElementConstructor = (statusElementSample, isSuccessStatus) => () => {
+  const statusElement = statusElementSample.cloneNode(true);
 
-  const destructSuccessElement = () => {
-    successElement.remove();
-    document.removeEventListener('keydown', keydownHandler);
-    document.removeEventListener('click', clickingHandler);
+  const destructStatusElement = () => {
+    statusElement.remove();
+    document.removeEventListener('keydown', documentKeydownHandler);
+    document.removeEventListener('click', documentClickingHandler);
   };
 
-  function keydownHandler(evt){
+  function documentKeydownHandler(evt){
     if(evt.keyCode === ESC_CODE){
-      destructSuccessElement();
+      destructStatusElement();
     }
   }
 
-  function clickingHandler(){
-    destructSuccessElement();
+  function documentClickingHandler(){
+    destructStatusElement();
   }
 
-  document.addEventListener('keydown', keydownHandler);
-  document.addEventListener('click', clickingHandler);
+  document.addEventListener('keydown', documentKeydownHandler);
+  document.addEventListener('click', documentClickingHandler);
 
-  resetDocument();
-  document.body.appendChild(successElement);
+  if(isSuccessStatus){
+    resetDocument();
+  }
+  else{
+    const closeButtonElement = statusElement.querySelector('.error__button');
+    closeButtonElement.addEventListener('click', () => destructStatusElement());
+  }
+  document.body.appendChild(statusElement);
 };
 
-const constructErrorElement = () => {
-  const errorElement = errorMessageSample.cloneNode(true);
-  const closeButton = errorElement.querySelector('.error__button');
-
-  const destructErrorElement = () => {
-    errorElement.remove();
-    document.removeEventListener('keydown', keydownHandler);
-    document.removeEventListener('click', clickingHandler);
-  };
-
-  function clickingHandler(){
-    destructErrorElement();
-  }
-
-  function keydownHandler(evt){
-    if(evt.keyCode === ESC_CODE){
-      destructErrorElement();
-    }
-  }
-
-  closeButton.addEventListener('click', clickingHandler);
-  document.addEventListener('keydown', keydownHandler);
-  document.addEventListener('click', clickingHandler);
-
-  document.body.appendChild(errorElement);
-};
+const constructSuccessElement = createStatusElementConstructor(successElementSample, true);
+const constructErrorElement = createStatusElementConstructor(errorElementSample, false);
 
 export {
   constructSuccessElement,
