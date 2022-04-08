@@ -1,31 +1,61 @@
 import { getArrayCutTo } from './array-utils.js';
-import { getData } from './communication.js';
-import { showLoadErrorMessage } from './show-error.js';
 import { createMarkers, deleteMarkers, closePopup } from './user-map.js';
 import { debounce } from './async-utils.js';
+import { dataStorage } from './data-storage.js';
 
 const MARKERS_COUNT = 10;
 const RERENDER_DELAY = 500;
 const MIDDLE_PRICE_LINE = 10000;
 const HIGH_PRICE_LINE = 50000;
 
-const criteria = {
-  accomodationType : 'any',
-  price: 'any',
-  rooms: 'any',
-  guests: 'any',
-  features : []
-};
+const criteria = (() => {
+  let type = 'any';
+  let price = 'any';
+  let rooms = 'any';
+  let guests = 'any';
+  const features = [];
+  return {
+    isAnyType : () => type === 'any',
+    isAnyRoomsCount: () => rooms === 'any',
+    isAnyGuestsCount: () => guests === 'any',
+    areFeaturesUnnecessary: () => features.length === 0,
+    setType : (value) => { type = value; },
+    getType : () => type,
+    setPrice : (value) => { price = value; },
+    getPrice : () => price,
+    setRooms : (value) => { rooms = value; },
+    getRooms : () => rooms,
+    setGuests : (value) => { guests = value; },
+    getGuests : () => guests,
+    appendFeature : (feature) => { features.push(feature); },
+    removeFeature : (feature) => {
+      const index = features.indexOf(feature);
+      if(index !== -1){
+        features.splice(index, 1);
+      }
+    },
+    getFeatures : () => features,
+    reset : () => {
+      type = 'any';
+      price = 'any';
+      rooms = 'any';
+      guests = 'any';
+      if(features.length){
+        features.splice(0, features.length);
+      }
+    }
+  };
+})();
 
 const filtersForm = document.querySelector('.map__filters');
 const featuresSet = filtersForm.querySelector('#housing-features');
 
-const filterAccomodationType = (element) => criteria.accomodationType === 'any' ||
-  element.offer.type === criteria.accomodationType;
+const filterAccomodationType = (element) => criteria.isAnyType() ||
+  element.offer.type === criteria.getType();
 
 const filterPrice = (element) => {
   const price = element.offer.price;
-  switch(criteria.price){
+  switch(criteria.getPrice()){
     case 'any':
       return true;
     case 'high':
@@ -38,14 +68,14 @@ const filterPrice = (element) => {
   }
 };
 
-const filterRooms = (element) => criteria.rooms === 'any' ||
-  Number(criteria.rooms) === element.offer.rooms;
+const filterRooms = (element) => criteria.isAnyRoomsCount() ||
+  Number(criteria.getRooms()) === element.offer.rooms;
 
-const filterGuests = (element) => criteria.guests === 'any' ||
-  Number(criteria.guests) === element.offer.guests;
+const filterGuests = (element) => criteria.isAnyGuestsCount() ||
+  Number(criteria.getGuests()) === element.offer.guests;
 
-const filterFeatures = (element) => (!criteria.features.length) ||
-  criteria.features.reduce(
+const filterFeatures = (element) => criteria.areFeaturesUnnecessary() ||
+  criteria.getFeatures().reduce(
     (result, feature) => result && element.offer.features && element.offer.features.includes(feature),
     true
   );
@@ -56,34 +86,38 @@ const filterDataWithTheCriteria = (data) => data.filter(filterAccomodationType)
   .filter(filterGuests)
   .filter(filterFeatures);
 
-const showFilteredAds = () =>{
+const prepareRendering = () => {
   closePopup();
   deleteMarkers();
-  getData(
-    (data)=>{
-      const filteredData = filterDataWithTheCriteria(data);
-      createMarkers(getArrayCutTo(filteredData, MARKERS_COUNT));
-    },
-    showLoadErrorMessage
-  );
 };
 
-const renderChosen = debounce(showFilteredAds, RERENDER_DELAY);
+const renderingHandler = () => {
+  prepareRendering();
+  const filteredData = filterDataWithTheCriteria(dataStorage.getData());
+  createMarkers(getArrayCutTo(filteredData, MARKERS_COUNT));
+};
+
+const renderChosen = debounce(renderingHandler, RERENDER_DELAY);
+
+const renderUnfiltered = () => {
+  prepareRendering();
+  createMarkers(getArrayCutTo(dataStorage.getData(), MARKERS_COUNT));
+};
 
 const selectorChanginHandler = (evt) => {
   const target = evt.target;
   if(target.matches('select')){
     if(target.matches('#housing-type')){
-      criteria.accomodationType = target.value;
+      criteria.setType(target.value);
     }
     if(target.matches('#housing-price')){
-      criteria.price = target.value;
+      criteria.setPrice(target.value);
     }
     if(target.matches('#housing-rooms')){
-      criteria.rooms = target.value;
+      criteria.setRooms(target.value);
     }
     if(target.matches('#housing-guests')){
-      criteria.guests = target.value;
+      criteria.setGuests(target.value);
     }
     renderChosen();
     evt.stopPropagation();
@@ -93,11 +127,10 @@ const selectorChanginHandler = (evt) => {
 const featuresChangingHandler = (evt) => {
   if(evt.target.matches('input[type="checkbox"]')){
     if(evt.target.checked){
-      criteria.features.push(evt.target.value);
+      criteria.appendFeature(evt.target.value);
     }
     else{
-      const index = criteria.features.indexOf(evt.target.value);
-      criteria.features.splice(index, 1);
+      criteria.removeFeature(evt.target.value);
     }
     renderChosen();
     evt.stopPropagation();
@@ -108,12 +141,8 @@ filtersForm.addEventListener('change', selectorChanginHandler);
 featuresSet.addEventListener('change', featuresChangingHandler);
 
 const resetCriteria = () => {
-  criteria.accomodationType = 'any';
-  criteria.price = 'any';
-  criteria.rooms = 'any';
-  criteria.guests = 'any';
-  criteria.features = [];
-  renderChosen();
+  criteria.reset();
+  renderUnfiltered();
 };
 
 export {
