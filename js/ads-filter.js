@@ -146,5 +146,6 @@ const resetCriteria = () => {
 };
 
 export {
+  MARKERS_COUNT,
   resetCriteria
 };

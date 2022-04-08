@@ -1,7 +1,7 @@
 import { deactivateForm } from './activity-toggling.js';
 import { sendData } from './communication.js';
 import {
-  MIN_PRICE,
+  typeToMinPrice,
   fillUpStandartPristineAttributes,
   getExtremNumberValue
 } from './user-ad-form-validation-utils.js';
@@ -25,7 +25,7 @@ const pristine = new Pristine(form, {
   errorTextClass: 'ad-form__element--error'
 });
 
-priceField.setAttribute('min', MIN_PRICE[accomodation.value]);
+priceField.setAttribute('min', typeToMinPrice[accomodation.value]);
 
 noUiSlider.create(sliderElement, {
   range: {
@@ -76,11 +76,11 @@ const warnCapacityValidation = () => {
 
 pristine.addValidator(capacity, validateCapacity, warnCapacityValidation);
 
-priceField.setAttribute('placeholder', `от ${ MIN_PRICE[accomodation.value] }`);
+priceField.setAttribute('placeholder', `от ${ typeToMinPrice[accomodation.value] }`);
 
 const accomodationChangingHandler = (evt) => {
-  priceField.setAttribute('placeholder', `от ${ MIN_PRICE[evt.target.value] }`);
-  priceField.setAttribute('min', MIN_PRICE[evt.target.value]);
+  priceField.setAttribute('placeholder', `от ${ typeToMinPrice[evt.target.value] }`);
+  priceField.setAttribute('min', typeToMinPrice[evt.target.value]);
   if (priceField.value !== ''){
     pristine.validate(priceField);
   }
@@ -140,9 +140,9 @@ const setUserAdFormSubmit = (successHandler, errorHandler) => {
 };
 
 const resetPriceInput = () => {
-  priceField.setAttribute('min', MIN_PRICE[accomodation.value]);
-  priceField.setAttribute('placeholder', `от ${ MIN_PRICE[accomodation.value] }`);
-  sliderElement.noUiSlider.set(MIN_PRICE[accomodation.value]);
+  priceField.setAttribute('min', typeToMinPrice[accomodation.value]);
+  priceField.setAttribute('placeholder', `от ${ typeToMinPrice[accomodation.value] }`);
+  sliderElement.noUiSlider.set(typeToMinPrice[accomodation.value]);
 };
 
 deactivateForm(form, 'ad-form--disabled');

@@ -1,4 +1,4 @@
-const MIN_PRICE = {
+const typeToMinPrice = {
   'bungalow' : 0,
   'flat' : 1000,
   'hotel': 3000,
@@ -32,7 +32,7 @@ const getExtremNumberValue = (elements, isMax) => {
 };
 
 export {
-  MIN_PRICE,
+  typeToMinPrice,
   fillUpStandartPristineAttributes,
   getExtremNumberValue
 };
