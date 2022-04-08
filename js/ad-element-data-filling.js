@@ -1,4 +1,4 @@
-const THESAURUS = {
+const typeThesaurus = {
   'flat' : 'Квартира',
   'bungalow' : 'Бунгало',
   'house':'Дом',
@@ -6,10 +6,10 @@ const THESAURUS = {
   'hotel':'Отель'
 };
 
-const hideElement = (element) => element.classList.add('hidden');  // returns undefined
+const hideElement = (element) => element.classList.add('hidden');
 
-const fillAdvertElementWithData = (adElement, advertData) =>{
-  const { author, offer } = advertData;
+const fillAdvertElementWithData = (adElement, data) =>{
+  const { author, offer } = data;
   const { avatar } = author;
   const { title, address, price, type, rooms, guests, checkIn, checkOut, features, description, photos } = offer;
 
@@ -20,7 +20,7 @@ const fillAdvertElementWithData = (adElement, advertData) =>{
   const priceElement = adElement.querySelector('.popup__text--price');
   priceElement.textContent = price ? `${ price } ₽/ночь` : hideElement(priceElement);
   const typeElement = adElement.querySelector('.popup__type');
-  typeElement.textContent = type ? THESAURUS[type] : hideElement(typeElement);
+  typeElement.textContent = type ? typeThesaurus[type] : hideElement(typeElement);
   const visitors = guests ? guests : 0;
   const capacityElement = adElement.querySelector('.popup__text--capacity');
   capacityElement.textContent  = rooms ?
@@ -30,9 +30,9 @@ const fillAdvertElementWithData = (adElement, advertData) =>{
   timeElement.textContent = checkIn && checkOut ?
     `Заезд после ${ checkIn }, выезд до ${ checkOut }` :
     hideElement(timeElement);
-  const featuresContainer = adElement.querySelector('.popup__features');
+  const featuresContainerElement = adElement.querySelector('.popup__features');
   if(features){
-    featuresContainer.querySelectorAll('.popup__feature').forEach((unit) => {
+    featuresContainerElement.querySelectorAll('.popup__feature').forEach((unit) => {
       const isDeclared = features.some(
         (feature) => unit.classList.contains(`popup__feature--${feature}`)
       );
@@ -42,22 +42,22 @@ const fillAdvertElementWithData = (adElement, advertData) =>{
     });
   }
   else{
-    hideElement(featuresContainer);
+    hideElement(featuresContainerElement);
   }
   const descriptionElement = adElement.querySelector('.popup__description');
   descriptionElement.textContent = description ? description: hideElement(descriptionElement);
-  const photosContainer = adElement.querySelector('.popup__photos');
-  const photoSample = photosContainer.querySelector('.popup__photo').cloneNode(true);
-  photosContainer.querySelectorAll('.popup__photo').forEach((unit) => unit.remove());
+  const photosContainerElement = adElement.querySelector('.popup__photos');
+  const photoElementSample = photosContainerElement.querySelector('.popup__photo').cloneNode(true);
+  photosContainerElement.querySelectorAll('.popup__photo').forEach((unit) => unit.remove());
   if(photos){
     photos.forEach((photo) => {
-      const newPhotoItem = photoSample.cloneNode(true);
-      newPhotoItem.src = photo;
-      photosContainer.append(newPhotoItem);
+      const newPhotoElement = photoElementSample.cloneNode(true);
+      newPhotoElement.src = photo;
+      photosContainerElement.append(newPhotoElement);
     });
   }
   else{
-    hideElement(photosContainer);
+    hideElement(photosContainerElement);
   }
   const avatarElement = adElement.querySelector('.popup__avatar');
   avatarElement.src = avatar ? avatar : hideElement(avatarElement);

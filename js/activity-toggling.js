@@ -1,31 +1,31 @@
-const deactivateSubTree = (root) => {
-  root.setAttribute('disabled','');
-  const subNodes = root.children;
-  for(let i=0; i<subNodes.length; i++){
-    deactivateSubTree(subNodes[i]);
+const deactivateSubTree = (rootElement) => {
+  rootElement.setAttribute('disabled','true');
+  const subElements = rootElement.children;
+  for(let i = 0; i < subElements.length; i++){
+    deactivateSubTree(subElements[i]);
   }
 };
 
-const activateSubTree = (root) => {
-  root.removeAttribute('disabled');
-  const subNodes = root.children;
-  for(let i=0; i<subNodes.length; i++){
-    activateSubTree(subNodes[i]);
+const activateSubTree = (rootElement) => {
+  rootElement.removeAttribute('disabled');
+  const subElements = rootElement.children;
+  for(let i = 0; i < subElements.length; i++){
+    activateSubTree(subElements[i]);
   }
 };
 
-const activateForm = (form, inactivityClass) => {
-  const formSubNodes = form.children;
-  form.classList.remove(inactivityClass);
-  for(let i=0; i<formSubNodes.length; i++){
-    activateSubTree(formSubNodes[i]);
+const activateForm = (formElement, inactivityClass) => {
+  const subElements = formElement.children;
+  formElement.classList.remove(inactivityClass);
+  for(let i = 0; i < subElements.length; i++){
+    activateSubTree(subElements[i]);
   }
 };
-const deactivateForm = (form, inactivityClass) => {
-  form.classList.add(inactivityClass);
-  const formSubNodes = form.children;
-  for(let i=0; i<formSubNodes.length; i++){
-    deactivateSubTree(formSubNodes[i]);
+const deactivateForm = (formElement, inactivityClass) => {
+  formElement.classList.add(inactivityClass);
+  const subElements = formElement.children;
+  for(let i = 0; i < subElements.length; i++){
+    deactivateSubTree(subElements[i]);
   }
 };
 
