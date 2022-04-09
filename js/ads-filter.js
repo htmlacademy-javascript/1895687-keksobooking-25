@@ -80,11 +80,19 @@ const filterFeatures = (element) => criteria.areFeaturesUnnecessary() ||
     true
   );
 
-const filterDataWithTheCriteria = (data) => data.filter(filterAccomodationType)
-  .filter(filterPrice)
-  .filter(filterRooms)
-  .filter(filterGuests)
-  .filter(filterFeatures);
+const filterWithTheCriteria = (element) => filterAccomodationType(element) && filterPrice(element) &&
+    filterRooms(element) && filterGuests(element) && filterFeatures(element);
+
+const filterDataWithTheCriteria = (data) => {
+  let incompleteFlag = true;
+  const filteredData = [];
+  for(let i = 0; incompleteFlag && i < data.length ; i++){
+    if(filterWithTheCriteria(data[i])){
+      incompleteFlag = filteredData.push(data[i]) < MARKERS_COUNT;
+    }
+  }
+  return filteredData;
+};
 
 const prepareRendering = () => {
   closePopup();
@@ -93,8 +101,7 @@ const prepareRendering = () => {
 
 const renderingHandler = () => {
   prepareRendering();
-  const filteredData = filterDataWithTheCriteria(dataStorage.get());
-  createMarkers(getArrayCutTo(filteredData, MARKERS_COUNT));
+  createMarkers(filterDataWithTheCriteria(dataStorage.get()));
 };
 
 const renderChosen = debounce(renderingHandler, RERENDER_DELAY);

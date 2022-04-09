@@ -6,7 +6,7 @@ const typeToMinPrice = {
   'palace': 10000
 };
 
-const fillUpStandartPristineAttributes = (element) => {
+const fillPristineAttributesUp = (element) => {
   if(element.hasAttribute('required')){
     element.dataset.pristineRequiredMessage = 'Это поле должно быть заполнено';
   }
@@ -33,6 +33,6 @@ const getExtremNumberValue = (elements, isMax) => {
 
 export {
   typeToMinPrice,
-  fillUpStandartPristineAttributes,
+  fillPristineAttributesUp,
   getExtremNumberValue
 };

@@ -2,14 +2,14 @@ import { deactivateForm } from './activity-toggling.js';
 import { sendData } from './communication.js';
 import {
   typeToMinPrice,
-  fillUpStandartPristineAttributes,
+  fillPristineAttributesUp,
   getExtremNumberValue
 } from './user-ad-form-validation-utils.js';
 
 const adFormElement = document.querySelector('.ad-form');
 const fieldsCollection = adFormElement.querySelectorAll('input');
 const priceFieldElement = adFormElement.querySelector('#price');
-const accomodationElement = adFormElement.querySelector('#type');
+const accomodationTypeElement = adFormElement.querySelector('#type');
 const roomsElement = adFormElement.querySelector('#room_number');
 const capacityElement = adFormElement.querySelector('#capacity');
 const timeInElement = adFormElement.querySelector('#timein');
@@ -17,7 +17,7 @@ const timeOutElement = adFormElement.querySelector('#timeout');
 const submitButtonElement = adFormElement.querySelector('.ad-form__submit');
 const sliderElement = adFormElement.querySelector('.ad-form__slider');
 
-fieldsCollection.forEach((field) => fillUpStandartPristineAttributes(field));
+fieldsCollection.forEach((field) => fillPristineAttributesUp(field));
 
 const pristine = new Pristine(adFormElement, {
   classTo: 'ad-form__element',
@@ -25,7 +25,7 @@ const pristine = new Pristine(adFormElement, {
   errorTextClass: 'ad-form__element--error'
 });
 
-priceFieldElement.setAttribute('min', typeToMinPrice[accomodationElement.value]);
+priceFieldElement.setAttribute('min', typeToMinPrice[accomodationTypeElement.value]);
 
 noUiSlider.create(sliderElement, {
   range: {
@@ -76,9 +76,9 @@ const warnCapacityValidation = () => {
 
 pristine.addValidator(capacityElement, validateCapacity, warnCapacityValidation);
 
-priceFieldElement.setAttribute('placeholder', `от ${ typeToMinPrice[accomodationElement.value] }`);
+priceFieldElement.setAttribute('placeholder', `от ${ typeToMinPrice[accomodationTypeElement.value] }`);
 
-const accomodationChangingHandler = (evt) => {
+const accomodationTypeChangingHandler = (evt) => {
   priceFieldElement.setAttribute('placeholder', `от ${ typeToMinPrice[evt.target.value] }`);
   priceFieldElement.setAttribute('min', typeToMinPrice[evt.target.value]);
   if (priceFieldElement.value !== ''){
@@ -86,7 +86,7 @@ const accomodationChangingHandler = (evt) => {
   }
 };
 
-accomodationElement.addEventListener('change', accomodationChangingHandler);
+accomodationTypeElement.addEventListener('change', accomodationTypeChangingHandler);
 
 const priceChangingHandler = (evt) => {
   sliderElement.noUiSlider.set(evt.target.value);
@@ -143,9 +143,9 @@ const setUserAdFormSubmit = (successHandler, errorHandler) => {
 };
 
 const resetPriceInput = () => {
-  priceFieldElement.setAttribute('min', typeToMinPrice[accomodationElement.value]);
-  priceFieldElement.setAttribute('placeholder', `от ${ typeToMinPrice[accomodationElement.value] }`);
-  sliderElement.noUiSlider.set(typeToMinPrice[accomodationElement.value]);
+  priceFieldElement.setAttribute('min', typeToMinPrice[accomodationTypeElement.value]);
+  priceFieldElement.setAttribute('placeholder', `от ${ typeToMinPrice[accomodationTypeElement.value] }`);
+  sliderElement.noUiSlider.set(typeToMinPrice[accomodationTypeElement.value]);
 };
 
 deactivateForm(adFormElement, 'ad-form--disabled');

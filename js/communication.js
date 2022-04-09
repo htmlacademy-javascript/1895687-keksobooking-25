@@ -12,14 +12,14 @@ const getData = (successHandler, errorHandler) =>
     });
 
 
-const sendData = (succeessHandler, errorHandler, data) =>
+const sendData = (successHandler, errorHandler, data) =>
   fetch('https://25.javascript.pages.academy/keksobooking', {
     method : 'POST',
     body : data
   })
     .then((response) => {
       if(response.ok){
-        succeessHandler();
+        successHandler();
       }
       else{
         throw new Error(`${response.status} ${response.statusText}`);
